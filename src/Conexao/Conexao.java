@@ -15,14 +15,6 @@ public class Conexao {
 
         }catch(SQLException e){
             System.out.println("Erro de conexão com o banco de dados "+e.getMessage());
-        }finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
         }
         return conn;
     }

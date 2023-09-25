@@ -10,7 +10,7 @@ public class Controle {
     private float limite;
     private float valorEntrada;
     private String descricaoEntrada;
-    private Map<Integer, String> entradaExtra;
+    private Map<Float, String> entradaExtra;
     private float totalGasto;
     private float diferenca;
     private boolean emAberto;
@@ -56,10 +56,10 @@ public class Controle {
     public void setDescricaoEntrada(String descricaoEntrada) {
         this.descricaoEntrada = descricaoEntrada;
     }
-    public Map<Integer, String> getEntradaExtra() {
+    public Map<Float, String> getEntradaExtra() {
         return entradaExtra;
     }
-    public void setEntradaExtra(Map<Integer, String> entradaExtra) {
+    public void setEntradaExtra(Map<Float, String> entradaExtra) {
         this.entradaExtra = entradaExtra;
     }
     public float getTotalGasto() {
