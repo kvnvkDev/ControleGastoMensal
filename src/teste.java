@@ -4,6 +4,8 @@ import java.util.Map;
 import Control.LembreteDao;
 import Model.Lembrete;
 
+
+
 public class teste {
     
 
@@ -18,6 +20,11 @@ public class teste {
         m.put((float) 1.159,"ssssww");
 
         System.out.println(m);
+
+        Map<Float,String> m2 = new HashMap<Float,String>().;
+        String mapstring = "{1.159=ssssww, 23.3=eeerrr, 35.0=wwweee, 88=sssdddf}";
+
+        
 /* 
     Lembrete l = new Lembrete("Janeiro", "2024", "sim", true);
     System.out.println(l.getAno()+"0*****");
