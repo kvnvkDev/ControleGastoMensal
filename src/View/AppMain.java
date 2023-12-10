@@ -12,6 +12,11 @@ public class AppMain extends Application {
         launch(args);
     }
 
+//***** */
+
+    
+        
+
     @Override
     public void start(Stage arg0) throws Exception {
         
@@ -19,11 +24,14 @@ public class AppMain extends Application {
         Parent root = fxmll.load();
         Scene tela = new Scene(root);
             
+      
+
+
         arg0.setTitle("Controle de Gasto Mensal");
         arg0.setScene(tela);
         arg0.show();
 
         //throw new UnsupportedOperationException("Unimplemented method 'start'");
     }
-    
+
 }

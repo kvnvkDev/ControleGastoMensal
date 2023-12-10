@@ -1,8 +1,10 @@
 package Model;
 
+import java.util.List;
 import java.util.Map;
 
 public class Controle {
+    
     
     
     private String mes;
@@ -10,12 +12,37 @@ public class Controle {
     private float limite;
     private float valorEntrada;
     private String descricaoEntrada;
-    private Map<Float, String> entradaExtra;
+    private List<EntradaExtra> entradaExtra;
     private float totalGasto;
     private float diferenca;
     private boolean emAberto;
 
 
+    public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada,
+            List<EntradaExtra> entradaExtra, float totalGasto, float diferenca, boolean emAberto) {
+        this.mes = mes;
+        this.ano = ano;
+        this.limite = limite;
+        this.valorEntrada = valorEntrada;
+        this.descricaoEntrada = descricaoEntrada;
+        this.entradaExtra = entradaExtra;
+        this.totalGasto = totalGasto;
+        this.diferenca = diferenca;
+        this.emAberto = emAberto;
+    }
+
+    public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada,
+            List<EntradaExtra> entradaExtra, float totalGasto, boolean emAberto) {
+        this.mes = mes;
+        this.ano = ano;
+        this.limite = limite;
+        this.valorEntrada = valorEntrada;
+        this.descricaoEntrada = descricaoEntrada;
+        this.entradaExtra = entradaExtra;
+        this.totalGasto = totalGasto;
+        this.emAberto = emAberto;
+    }
+    
     public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada, boolean emAberto) {
         this.mes = mes;
         this.ano = ano;
@@ -25,6 +52,7 @@ public class Controle {
         this.emAberto = emAberto;
     }
 
+    
 
     public String getMes() {
         return mes;
@@ -56,10 +84,10 @@ public class Controle {
     public void setDescricaoEntrada(String descricaoEntrada) {
         this.descricaoEntrada = descricaoEntrada;
     }
-    public Map<Float, String> getEntradaExtra() {
+    public List<EntradaExtra> getEntradaExtra() {
         return entradaExtra;
     }
-    public void setEntradaExtra(Map<Float, String> entradaExtra) {
+    public void setEntradaExtra(List<EntradaExtra> entradaExtra) {
         this.entradaExtra = entradaExtra;
     }
     public float getTotalGasto() {

@@ -56,7 +56,7 @@
             <ButtonBar layoutY="12.0" prefHeight="42.0" prefWidth="612.0">
               <buttons>
                 <Button fx:id="botaoHistorico" mnemonicParsing="false" prefHeight="26.0" text="Button" />
-                  <Button fx:id="botaoLimite" mnemonicParsing="false" prefHeight="26.0" prefWidth="184.0" text="Button" />
+                  <Button fx:id="botaoLimite" mnemonicParsing="false" onAction="#definirLimite" prefHeight="26.0" prefWidth="184.0" text="Button" />
                   <Button fx:id="botaoFecharAbrir" mnemonicParsing="false" text="Button" />
                   <Button fx:id="botaoLembrete" mnemonicParsing="false" text="Button" />
                   <Button fx:id="botaoEntrada" mnemonicParsing="false" text="Button" />
