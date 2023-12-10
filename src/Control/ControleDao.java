@@ -194,4 +194,14 @@ public class ControleDao {
 
         return true;
     }
+
+    public String[] getMesEmAberto() throws SQLException{
+        String query = "select mes_ano from Controle where emAberto = 1";
+        stmt = con.prepareStatement(query);
+        
+        ResultSet rs = stmt.executeQuery();
+
+        return rs.getString("mes_ano").split("_");
+
+    }
 }

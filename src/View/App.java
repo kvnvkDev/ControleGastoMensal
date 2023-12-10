@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.Modality;
 
 public class App {
 
@@ -102,22 +103,70 @@ public class App {
 
 
     //Local Date
-        protected static LocalDate  DATE = LocalDate.now();
-        protected static String MES = String.valueOf(DATE.getMonthValue());
-        protected static String ANO = String.valueOf(DATE.getYear());
+        protected static LocalDate  DATENOW = LocalDate.now();
+        protected static String MES = null;//String.valueOf(DATE.getMonthValue());
+        protected static String ANO = null;//String.valueOf(DATE.getYear());
         protected static ControleDao cDao= null;
         protected static Controle controle = null;
+
+        public String mesNome(String mesNum){
+            switch (mesNum) {
+                case "1":
+                    return "Janeiro";
+                case "2":
+                    return "Fevereiro";
+                case "3":
+                    return "Março";    
+                case "4":
+                    return "Abril";
+                case "5":
+                    return "Maio";
+                case "6":
+                    return "Junho";
+                case "7":
+                    return "Julho";
+                case "8":
+                    return "Agosto";
+                case "9":
+                    return "Setembro";
+                case "10":
+                    return "Outubro";
+                case "11":
+                    return "Novembro";
+                case "12":
+                    return "Dezembro";
+                default:
+                    return "mês inválido";
+            }
+        }
 
         public void initialize(){
             try{
                 System.out.println("Iniciando...");
                 cDao = new ControleDao();
-                controle = cDao.getControle(MES, ANO);
+                String[] mesAberto = cDao.getMesEmAberto();
+                MES = mesAberto[0];
+                ANO = mesAberto[1];
+                String mes = mesNome(MES);
+                //compara mes
+                if (!mesAberto[0].equals(String.valueOf(DATENOW.getMonthValue()))){
+                    Alert tidErr = new Alert(Alert.AlertType.INFORMATION);
+            
+                    tidErr.setTitle("O mês em aberto é diferente do mês atual!");
+                    tidErr.setHeaderText("O mês em aberto é "+ mes + ".");
+                    tidErr.setContentText("Caso queira abrir o controle do mês atual, primeiro feche o mês em aberto.");
+                    tidErr.initModality(Modality.APPLICATION_MODAL);
+                    //tidErr.initOwner();
+                    tidErr.showAndWait();
+                }
+
+
+                controle = cDao.getControle(mesAberto[0],mesAberto[1]);
 
 
                 labelLimite.setText("Limite: R$ " + controle.getLimite());
                 labelGastoMes.setText("Gasto acumulado: R$ " + controle.getTotalGasto());
-                labelMesAberto.setText(DATE.getMonth() + " - " + DATE.getYear() + "   Aberto");
+                labelMesAberto.setText(mes + " - " + ANO + "   Aberto");
 
                 float saldo = controle.getValorEntrada();
                 List<EntradaExtra> m = controle.getEntradaExtra();
@@ -161,13 +210,13 @@ public class App {
             System.out.println(e.getMessage());
             tidErr.setTitle("Valor não é válido!");
             tidErr.setHeaderText("Insira um valor numérico Ex: 2000.00");
-            tidErr.show();
+            tidErr.showAndWait();
         }catch(SQLException e){
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             tidErr.setTitle("Erro ao alterar limite");
             tidErr.setHeaderText(e.getMessage());
-            tidErr.show();
+            tidErr.showAndWait();
         }
 
     }
