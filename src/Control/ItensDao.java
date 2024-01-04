@@ -19,9 +19,13 @@ public class ItensDao {
         //stmt = con.createStatement();
     }
 
+    private void abrirConexao() throws SQLException{
+        if(con.isClosed()){con = Conexao.connect();}
+    }
+
     public boolean adicionarItens(Itens it) throws SQLException{
         try{
-        
+        abrirConexao();
             String mesano = it.getMes() + "_" + it.getAno();
             boolean emPeso = it.isEmPeso();
             float peso = it.getPeso();

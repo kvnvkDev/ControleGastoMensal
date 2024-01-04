@@ -54,21 +54,16 @@ public class Fechamento {
 
 
      //*********************** */
+     //https://www.botecodigital.dev.br/java/java-executando-comandos-terminal/
         public void restartApplication() throws URISyntaxException, IOException{
-            System.out.println("12123123123");
-  final File currentFile = new File(App.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-  /* is it a jar file? */
-  if(!currentFile.getName().endsWith(".jar"))
-    return;System.out.println("12123123123");
-
-  /* Build command: java -jar application.jar */
-  final String command = "java -jar " + currentFile.getPath();
-
-  final ProcessBuilder builder = new ProcessBuilder(command);
-  builder.start();System.out.println("12123123123");
-  System.exit(0);
-  System.out.println("12123123123");
+            try {
+    String comando ="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe https://www.botecodigital.dev.br";
+    Process exec = Runtime.getRuntime().exec( comando );
+     
+    System.exit(0);
+} catch (IOException e) {
+    e.printStackTrace();
+}
 }
 
 
@@ -125,7 +120,10 @@ System.out.println("fechamento");
                 System.out.println("insrindoee" + String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
                 App.cDao.inserirEntradaExtra(ee, String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
                 System.out.println("inserido+++");
-                restartApplication(); 
+                restartApplication(); //fechar e abrir para atualizar dados da tela principal
+                
+
+                //************************* */
             }
             
 

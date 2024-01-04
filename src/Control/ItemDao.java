@@ -18,9 +18,13 @@ public class ItemDao {
         //stmt = con.createStatement();
     }
 
+    private void abrirConexao() throws SQLException{
+        if(con.isClosed()){con = Conexao.connect();}
+    }
+
     public boolean adicionarItem(String it) throws SQLException{
         try{
-        
+        abrirConexao();
 
         String query = " insert into Item(item) "
         +" values(?);";

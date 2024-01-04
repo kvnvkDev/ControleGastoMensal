@@ -18,9 +18,13 @@ public class CategoriaDao {
         //stmt = con.createStatement();
     }
 
+    private void abrirConexao() throws SQLException{
+        if(con.isClosed()){con = Conexao.connect();}
+    }
+
     public boolean adicionarCategoria(String cat) throws SQLException{
         try{
-        
+        abrirConexao();
 
         String query = " insert into Categoria(categoria) "
         +" values(?);";

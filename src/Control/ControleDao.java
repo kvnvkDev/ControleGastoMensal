@@ -22,6 +22,10 @@ public class ControleDao {
         //stmt = con.createStatement();
     }
 
+    private void abrirConexao() throws SQLException{
+        if(con.isClosed()){con = Conexao.connect();}
+    }
+
     private List<EntradaExtra> convertStringToMap(String descExtra){
 
             //
@@ -57,6 +61,7 @@ public class ControleDao {
 
     public boolean criarControle(Controle ctrl) throws SQLException{
         try{
+            abrirConexao();
         String mesano = ctrl.getMes() + "_" + ctrl.getAno();
         Float limite = ctrl.getLimite();
         Float valEnt = ctrl.getValorEntrada();
@@ -81,7 +86,7 @@ System.out.println("insertmesano" + mesano);
         }catch(Exception e){
             System.out.print("Erro ao criar controle "+ e.getMessage());
             return false;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -90,13 +95,13 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
         
     }
 
     public boolean inserirEntradaExtra(EntradaExtra map, String mes_ano) throws SQLException{
         try{
-        
+        abrirConexao();
             String query = "select valor_descricaoEntradaExtra from Controle where mes_ano = '"+ mes_ano+"'";
             stmt = con.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
@@ -136,7 +141,7 @@ System.out.println("insertmesano" + mesano);
         }catch(Exception e){
             System.out.print("Erro ao inserir valor Entrada extra"+ e.getMessage());
             return false;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -145,13 +150,14 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
 
     }
 
 
     public Controle getControle(String mes, String ano){
         try {
+            abrirConexao();
             String query = "select * from Controle where mes_ano = ?";
         System.out.println(query);
             stmt = con.prepareStatement(query);
@@ -179,7 +185,7 @@ System.out.println("insertmesano" + mesano);
         }catch(Exception e){
             System.out.print("Erro ao buscar dados"+ e.getMessage());
             return null;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -188,12 +194,13 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
     }
 
 
     public boolean alterarLimite(Float lim) { //, String mes, String ano
         try{
+            abrirConexao();
         String query = "update Controle set limite=? where emAberto = 1 "; //'" + (mes + "_" + ano)+"'";
         stmt = con.prepareStatement(query);
         stmt.setFloat(1, lim);
@@ -203,7 +210,7 @@ System.out.println("insertmesano" + mesano);
         }catch(SQLException e){
             System.out.print("Erro ao alterar valor "+ e.getMessage());
             return false;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -212,11 +219,12 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
     }
 
     public String[] getMesEmAberto() throws SQLException{
         try{
+            abrirConexao();
         String query = "select mes_ano from Controle where emAberto = 1";
         stmt = con.prepareStatement(query);
         
@@ -231,7 +239,7 @@ System.out.println("insertmesano" + mesano);
         }catch(SQLException e){
             System.out.print("Erro ao encontrar controle em aberto "+ e.getMessage());
             return null;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -240,11 +248,12 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
     }
 
     public boolean fecharControle(String mes_ano) {
         try{
+            abrirConexao();
         String query = "update Controle set emAberto=0 where mes_ano = ?";
         stmt = con.prepareStatement(query);
         stmt.setString(1, mes_ano);
@@ -254,7 +263,7 @@ System.out.println("insertmesano" + mesano);
         }catch(Exception e){
             System.out.print("Erro ao fechar o mes "+ e.getMessage());
             return false;
-        }/*finally {
+        }finally {
                 try {
                     if (con != null) {
                         con.close();
@@ -263,7 +272,7 @@ System.out.println("insertmesano" + mesano);
                 } catch (SQLException ex) {
                     System.out.println(ex.getMessage());
                 }
-        }*/
+        }
     }
 
 

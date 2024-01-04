@@ -182,8 +182,20 @@ public class App {
                     //tidErr.initOwner();
                     tidErr.showAndWait();
                 }
+                //alerta lembrete
+                //verifica lempret
+                FXMLLoader fxmll = new FXMLLoader(getClass().getResource("CheckLembrete.fxml"));
+                Parent root = fxmll.load();
+                Scene tela = new Scene(root);
+        
+                Stage stage = new Stage();
+                stage.setScene(tela);
+                stage.setTitle("Teste - check lembtrete");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
 
-                
+System.out.println("cntrol");
+
                 controle = cDao.getControle(mesAberto[0],mesAberto[1]);
 
                 System.out.println(controle.getMes() + controle.getLimite() + controle.getDescricaoEntrada());
@@ -204,7 +216,7 @@ public class App {
                 }
 
             
-            }catch(SQLException e){
+            }catch(SQLException | IOException e){
 
             }
 
