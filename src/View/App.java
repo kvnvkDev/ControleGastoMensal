@@ -4,24 +4,31 @@ package View;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import Control.ControleDao;
+import Control.LembreteDao;
 import Model.Controle;
 import Model.EntradaExtra;
+import Model.Lembrete;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -235,12 +242,12 @@ System.out.println("cntrol");
         Optional<String> result = tid.showAndWait();
 
         try {
-            float valLimite = Float.parseFloat(result.get());
-            System.out.println("limitedefinido:"+valLimite);
-            labelLimite.setText("Limite: R$ "+ Float.toString(valLimite));
-        
-            
-            cDao.alterarLimite(valLimite);
+            if(result.isPresent()){
+                float valLimite = Float.parseFloat(result.get());
+                System.out.println("limitedefinido:"+valLimite);
+                labelLimite.setText("Limite: R$ "+ Float.toString(valLimite));
+                cDao.alterarLimite(valLimite);
+            }
         } catch (NumberFormatException e ) {
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
@@ -294,6 +301,82 @@ System.out.println("cntrol");
             tidErr.setHeaderText(e.getMessage());
             tidErr.showAndWait();
         }
+    }
+
+    @FXML
+    void criarLembrete(ActionEvent event) {
+        try{
+            ComboBox<String> cbm = new ComboBox<>();
+            cbm.getItems().addAll("JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO");
+            cbm.getSelectionModel().select(0);
+
+            ComboBox<String> cba = new ComboBox<>();
+            cba.getItems().setAll("2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034","2035","2036","2037","2038","2039","2040","2041","2042","2043","2044","2045","2046","2047","2048","2049","2050","2051","2052");
+            cba.getSelectionModel().select(0);
+
+            TextInputDialog td = new TextInputDialog(); 
+            td.setTitle("Criar novo lembrete");
+            td.setHeaderText("Insira a descrição e a data do lembrete"); 
+            TextField tf = new TextField("Lembrete");
+            VBox vBox = new VBox(tf,cbm,cba);
+            vBox.setMargin(cbm, new Insets(10,0,8,0));
+            td.getDialogPane().setContent(vBox);
+
+            Optional<String> option = td.showAndWait();
+            if(option.isPresent()){
+            
+                Lembrete lemb = new Lembrete(String.valueOf(cbm.getSelectionModel().getSelectedIndex() + 1), cba.getSelectionModel().getSelectedItem().toString(), tf.getText(), true);
+                LembreteDao lDao = new LembreteDao();
+                lDao.adicionarLembrete(lemb);
+            
+        
+            }
+            System.out.println(option.toString());
+
+        }catch(Exception e){
+            Alert tidErr = new Alert(Alert.AlertType.ERROR);
+            System.out.println(e.getMessage());
+            tidErr.setTitle("Erro ao criar lembrete");
+            tidErr.setHeaderText(e.getMessage());
+            tidErr.showAndWait();
+        }
+
+    }
+
+
+    @FXML
+    void definirEntrada(ActionEvent event) {
+        try {
+            float val = controle.getValorEntrada();
+            String desc = controle.getDescricaoEntrada();
+System.out.println(val + desc);
+            TextInputDialog td = new TextInputDialog(); 
+            td.setTitle("Definir valor de entrada");
+            td.setHeaderText("Insira a descrição e o valor de entrada"); 
+            TextField tfv = new TextField(String.valueOf(val));
+            TextField tfd = new TextField(desc);
+            VBox vBox = new VBox(tfd,tfv);
+            vBox.setMargin(tfv, new Insets(10,0,8,0));
+            td.getDialogPane().setContent(vBox);
+
+            Optional<String> option = td.showAndWait();
+            if(option.isPresent()){
+                float valEnt = Float.parseFloat(tfv.getText());
+                String valDesc = tfd.getText();
+                cDao.alterarEntreda(valEnt, valDesc);
+
+                controle.setValorEntrada(valEnt);
+                controle.setDescricaoEntrada(valDesc);
+            System.out.println(controle.getValorEntrada());
+                labelSaldoMes.setText("Saldo de entrada: R$ " + valEnt);
+            
+            }
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
     }
 
 }

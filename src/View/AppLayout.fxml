@@ -111,8 +111,8 @@
                 <Button fx:id="botaoHistorico" mnemonicParsing="false" prefHeight="26.0" text="Button" />
                   <Button fx:id="botaoLimite" mnemonicParsing="false" onAction="#definirLimite" prefHeight="26.0" prefWidth="184.0" text="Button" />
                   <Button fx:id="botaoFecharAbrir" mnemonicParsing="false" onAction="#abrirFecharMes" text="Button" />
-                  <Button fx:id="botaoLembrete" mnemonicParsing="false" text="Button" />
-                  <Button fx:id="botaoEntrada" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="botaoLembrete" mnemonicParsing="false" onAction="#criarLembrete" text="Button" />
+                  <Button fx:id="botaoEntrada" mnemonicParsing="false" onAction="#definirEntrada" text="Button" />
                   <Button fx:id="botaoExportar" mnemonicParsing="false" text="Button" />
                   <Button fx:id="botaoSobre" mnemonicParsing="false" text="Button" />
                   <Button fx:id="botaoAnalise" mnemonicParsing="false" text="Button" />

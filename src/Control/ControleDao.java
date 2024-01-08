@@ -167,6 +167,7 @@ System.out.println("insertmesano" + mesano);
            
 
             //teste
+            /*
             System.out.println("teste");
             System.out.println(rs.getFloat("limite"));
             System.out.println(rs.getRow());
@@ -175,7 +176,7 @@ System.out.println("insertmesano" + mesano);
             System.out.println(rs.getString("mes_ano"));
             System.out.println(rs.getString("descricaoEntrada"));
             System.out.println("------------" + rs.getString("valor_descricaoEntradaExtra"));
-
+*/
             List<EntradaExtra> map = convertStringToMap(rs.getString("valor_descricaoEntradaExtra"));
             
 
@@ -275,5 +276,30 @@ System.out.println("insertmesano" + mesano);
         }
     }
 
+    public boolean alterarEntreda(Float entr, String descricao) { //, String mes, String ano
+        try{
+            abrirConexao();
+        String query = "update Controle set valorEntrada=?, descricaoEntrada=? where emAberto = 1 "; //'" + (mes + "_" + ano)+"'";
+        stmt = con.prepareStatement(query);
+        stmt.setFloat(1, entr);
+        stmt.setString(2,descricao);
+        stmt.execute();
+
+        return true;
+        }catch(SQLException e){
+            System.out.print("Erro ao alterar valor "+ e.getMessage());
+            return false;
+        }finally {
+                try {
+                    if (con != null) {
+                        con.close();
+                        System.out.println("Fechando conexão");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
+        }
+    }
+    
 
 }

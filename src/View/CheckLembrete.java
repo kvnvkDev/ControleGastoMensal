@@ -160,7 +160,8 @@ listaLemb.setOnMouseClicked(new EventHandler<MouseEvent>() {
             }
         }else{
             Alert tidErr2 = new Alert(Alert.AlertType.WARNING);
-            tidErr2.setTitle("Selecione 1 lembrete para adiar ");
+            tidErr2.setTitle("Alerta! ");
+            tidErr2.setHeaderText("Selecione 1 lembrete para adiar.");
             tidErr2.showAndWait();
         }
 
