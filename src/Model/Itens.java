@@ -4,7 +4,7 @@ public class Itens {
     
     private String mes;
     private String ano;
-    private short quantidade;
+    private int quantidade;
     private boolean emPeso;
     private float peso;
     private String item;
@@ -14,7 +14,7 @@ public class Itens {
     private boolean destaque;
 
     
-    public Itens(String mes, String ano, short quantidade, boolean emPeso, float peso, String item, String categoria,
+    public Itens(String mes, String ano, int quantidade, boolean emPeso, float peso, String item, String categoria,
             float valorCalculado, float valorUnitário, boolean destaque) {
         this.mes = mes;
         this.ano = ano;
@@ -27,6 +27,30 @@ public class Itens {
         this.valorUnitário = valorUnitário;
         this.destaque = destaque;
     }
+
+    public Itens(String mes, String ano, int quantidade, String item, String categoria,
+             float valorUnitário, boolean destaque) {
+        this.mes = mes;
+        this.ano = ano;
+        this.quantidade = quantidade;
+        this.item = item;
+        this.categoria = categoria;
+        this.valorUnitário = valorUnitário;
+        this.destaque = destaque;
+    }
+
+    public Itens(String mes, String ano, boolean emPeso, float peso, String item, String categoria,
+            float valorCalculado, boolean destaque) {
+        this.mes = mes;
+        this.ano = ano;
+        this.emPeso = emPeso;
+        this.peso = peso;
+        this.item = item;
+        this.categoria = categoria;
+        this.valorCalculado = valorCalculado;
+        this.destaque = destaque;
+    }
+
 
 
     public String getMes() {
@@ -49,7 +73,7 @@ public class Itens {
     }
 
 
-    public short getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
     }
 

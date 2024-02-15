@@ -302,4 +302,57 @@ System.out.println("insertmesano" + mesano);
     }
     
 
+    public float totalGastoMes(String mes_ano){
+        try{
+            abrirConexao();
+            String query = "select totalGasto from Controle where mes_ano = ?";
+            stmt = con.prepareStatement(query);
+            stmt.setString(1, mes_ano);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return rs.getFloat("totalGasto");
+            }else{
+                return 0;
+            }
+       
+        }catch(SQLException e){
+            System.out.print("Erro ao buscar valor de controle "+ e.getMessage());
+            return -1;
+        }finally {
+                try {
+                    if (con != null) {
+                        con.close();
+                        System.out.println("Fechando conexão");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
+        }   
+    }
+
+    public void somaTotalGasto(float total, String mes_ano){
+        try{
+            abrirConexao();
+            String query = "update Controle set totalGasto = ? where mes_ano = ?";
+            stmt = con.prepareStatement(query);
+            stmt.setFloat(1, total);
+            stmt.setString(2, mes_ano);
+            stmt.execute();
+        }catch(SQLException e){
+            System.out.print("Erro ao armazenar soma total "+ e.getMessage());
+            
+        }finally {
+                try {
+                    if (con != null) {
+                        con.close();
+                        System.out.println("Fechando conexão");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
+        }
+    }
+
+    
 }

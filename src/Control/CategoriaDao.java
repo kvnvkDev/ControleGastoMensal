@@ -26,7 +26,7 @@ public class CategoriaDao {
         try{
         abrirConexao();
 
-        String query = " insert into Categoria(categoria) "
+        String query = " insert or ignore into Categoria(categoria) "
         +" values(?);";
 
         stmt = con.prepareStatement(query);

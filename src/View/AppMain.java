@@ -22,8 +22,7 @@ public class AppMain extends Application {
         
         FXMLLoader fxmll = new FXMLLoader(getClass().getResource("AppLayout.fxml"));
         Parent root = fxmll.load();
-        Scene tela = new Scene(root);
-            
+        Scene tela = new Scene(root); 
       
 
 

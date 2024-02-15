@@ -9,9 +9,16 @@ import Model.Controle;
 import Model.EntradaExtra;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class Fechamento {
 
@@ -52,15 +59,21 @@ public class Fechamento {
     private CheckBox checkDif;
 
 
+    public static boolean close;
      //*********************** */
      //https://www.botecodigital.dev.br/java/java-executando-comandos-terminal/
-        public void restartApplication() throws URISyntaxException, IOException{
-            try {
+         public void restartApplication(ActionEvent event) throws URISyntaxException, IOException{
+            try {/*
     String comando ="C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe https://www.botecodigital.dev.br";
     Process exec = Runtime.getRuntime().exec( comando );
      
-    System.exit(0);
-} catch (IOException e) {
+    System.exit(0);*/
+close = true;
+    final Node source = (Node) event.getSource();
+    final Stage stage = (Stage) source.getScene().getWindow();
+    stage.close();
+} catch (Exception e) {
+    System.out.println(e.getMessage());
     e.printStackTrace();
 }
 }
@@ -81,11 +94,11 @@ System.out.println("fechamento");
         String desc = "";
         List<EntradaExtra> m = App.controle.getEntradaExtra();
         if (m == null || m.isEmpty()) {
-            labelSaldoExtra.setText("Saldo extra: R$ ");
+            labelSaldoExtra.setText("Saldo extra: R$ ");System.out.println("m"+m);
             labelDescricaoExtra.setText("Descrição: ");
-        }else{
-            for (int i=0; i > m.size();i++){
-                saldo = saldo + m.get(i).getValorEntrada();
+        }else{System.out.println("map"+m);
+            for (int i=0; i < m.size();i++){
+                saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo);
                 desc = desc + m.get(i).getDescricaoEntrada() + "\n";
             }
             labelSaldoExtra.setText("Saldo extra: R$ " + saldo);
@@ -104,7 +117,8 @@ System.out.println("fechamento");
 
     @FXML
     void fecharMes(ActionEvent event) throws URISyntaxException, IOException{
-
+restartApplication(event);
+        /*
         try{
             float valDif = 0;
             
@@ -119,16 +133,40 @@ System.out.println("fechamento");
                 System.out.println("insrindoee" + String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
                 App.cDao.inserirEntradaExtra(ee, String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
                 System.out.println("inserido+++");
-                restartApplication(); //fechar e abrir para atualizar dados da tela principal
+                restartApplication(event); //fechar e abrir para atualizar dados da tela principal
                 
 
-                //************************* */
+                //************************* *
             }
             
-
+ 
         }catch(SQLException e){
             System.out.println("Erro fechar mes" + e.getMessage());
-        }
+        }*/
     }
 
+    @FXML
+    void verItens(ActionEvent event){
+        try{
+            App.DADOS = App.MES+"_"+App.ANO;//testtar
+            FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Historico.fxml"));
+            Parent root = fxmll.load();
+           // root.setUserData(MES+"_"+ANO);
+            
+            Scene tela = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(tela);
+            stage.setTitle("Controle de Gasto Mensal - Histórico");
+            stage.initModality(Modality.APPLICATION_MODAL); 
+            
+            stage.showAndWait();
+        }catch(IOException e){
+            Alert tidErr = new Alert(Alert.AlertType.ERROR);
+            System.out.println(e.getMessage());
+            e.getStackTrace();
+            tidErr.setTitle("Erro de tela Histórico");
+            tidErr.setHeaderText(e.getMessage());
+            tidErr.showAndWait();
+        }
+    }
 }

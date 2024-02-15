@@ -2,9 +2,13 @@ package Control;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Conexao.Conexao;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 
 public class ItemDao {
@@ -26,7 +30,7 @@ public class ItemDao {
         try{
         abrirConexao();
 
-        String query = " insert into Item(item) "
+        String query = " insert or ignore into Item(item) "
         +" values(?);";
 
         stmt = con.prepareStatement(query);
@@ -53,5 +57,22 @@ public class ItemDao {
         
     }
 
+
+    public ArrayList<String> listaItem(String pesquisa) throws SQLException{
+        String query = "select item from Item where item like ?";
+        stmt = con.prepareStatement(query);
+        stmt.setString(1,'%'+ pesquisa+'%');
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<String> lista = new ArrayList<String>();
+
+        while (rs.next()) {
+            lista.add(rs.getString("item"));
+            System.out.println(rs.getString("item"));
+        }
+
+        return lista;
+    }
 
 }
