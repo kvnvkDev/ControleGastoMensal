@@ -58,6 +58,32 @@ public class ControleDao {
             }
     }
     
+    public boolean verificaAcesso(){
+        try {
+            abrirConexao();
+            String query = "select mes_ano from Controle where emAberto = 1";
+            stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(Exception e){
+            System.out.print("Erro ao pesquisar controle "+ e.getMessage());
+            return false;
+        }finally {
+                try {
+                    if (con != null) {
+                        con.close();
+                        System.out.println("Fechando conexão");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
+        }
+    }
 
     public boolean criarControle(Controle ctrl) throws SQLException{
         try{
@@ -252,12 +278,13 @@ System.out.println("insertmesano" + mesano);
         }
     }
 
-    public boolean fecharControle(String mes_ano) {
+    public boolean fecharControle(String mes_ano,float dif) {
         try{
             abrirConexao();
-        String query = "update Controle set emAberto=0 where mes_ano = ?";
+        String query = "update Controle set emAberto=0, diferenca=? where mes_ano = ?";
         stmt = con.prepareStatement(query);
-        stmt.setString(1, mes_ano);
+        stmt.setFloat(1, dif);
+        stmt.setString(2, mes_ano);
         stmt.execute();
 
         return true;

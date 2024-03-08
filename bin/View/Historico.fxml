@@ -35,7 +35,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -44,7 +46,7 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="400.0" prefWidth="670.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS">
          <children>
-            <Label fx:id="labelMes" layoutX="14.0" layoutY="14.0" text="Mes - Ano" textFill="GREY">
+            <Label fx:id="labelMes" layoutX="14.0" layoutY="8.0" text="Mes - Ano" textFill="GREY">
                <font>
                   <Font size="18.0" />
                </font>
@@ -54,18 +56,35 @@
                <font>
                   <Font size="16.0" />
                </font></Label>
-            <Label fx:id="labelSaldoDescricao" layoutX="16.0" layoutY="46.0" text="Descrição: Salário" textFill="GREY" />
-            <Label fx:id="labelSaldoExtra" layoutX="16.0" layoutY="64.0" text="Saldo extra: R$ 9999,99" textFill="GREY" />
-            <Label fx:id="labelDescricaoExtra" layoutX="16.0" layoutY="76.0" prefHeight="34.0" prefWidth="250.0" text="Descrição: -" textFill="GREY" />
-            <ListView fx:id="tabelaItens" layoutX="14.0" layoutY="138.0" prefHeight="200.0" prefWidth="612.0" />
-            <ComboBox fx:id="selectMes" layoutX="16.0" layoutY="360.0" prefWidth="150.0" AnchorPane.rightAnchor="473.6" />
-            <ComboBox fx:id="selectAno" layoutX="181.0" layoutY="359.0" prefHeight="26.0" prefWidth="104.0" />
-            <Button fx:id="botaoSelecionaMes" layoutX="305.0" layoutY="361.0" mnemonicParsing="false" onAction="#selectHist" text="Ver mẽs anterior" />
+            <Label fx:id="labelSaldoDescricao" layoutX="16.0" layoutY="34.0" text="Descrição: Salário" textFill="GREY" visible="false" />
+            <ComboBox fx:id="selectMes" layoutX="15.999999999999972" layoutY="364.0" prefWidth="150.0" AnchorPane.rightAnchor="473.6" />
+            <ComboBox fx:id="selectAno" layoutX="181.0" layoutY="363.0" prefHeight="26.0" prefWidth="104.0" />
+            <Button fx:id="botaoSelecionaMes" layoutX="305.0" layoutY="364.0" mnemonicParsing="false" onAction="#selectHist" text="Ver mẽs anterior" />
             <Label fx:id="labelTotal" layoutX="409.0" layoutY="18.0" text="Total gasto: R$ 9999,99" textFill="#bfbd5f">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
+            <TableView fx:id="tabelaItens" layoutX="16.0" layoutY="116.0" prefHeight="238.0" prefWidth="608.0">
+              <columns>
+                <TableColumn fx:id="colQnt" prefWidth="44.00006103515625" text="Qnt" />
+                <TableColumn fx:id="colDest" prefWidth="63.199981689453125" text="Destaque" />
+                  <TableColumn fx:id="colPeso" prefWidth="76.800048828125" text="Peso" />
+                  <TableColumn fx:id="colItem" prefWidth="208.79998779296875" text="Item" />
+                  <TableColumn fx:id="colCat" minWidth="6.39996337890625" prefWidth="133.5999755859375" text="Categoria" />
+                  <TableColumn fx:id="colVal" prefWidth="76.80010986328125" text="Valor Calc" />
+              </columns>
+            </TableView>
+            <ScrollPane layoutX="16.0" layoutY="35.0" prefHeight="78.0" prefWidth="240.0" style="-fx-background-color: #000000;">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="223.0" style="-fx-background-color: #000000;">
+                     <children>
+                        <Label fx:id="labelSaldoExtra" prefHeight="18.0" prefWidth="227.0" text="Saldo extra: R$ 9999,99" textFill="GREY" />
+                        <Label fx:id="labelDescricaoExtra" alignment="TOP_LEFT" maxHeight="300.0" maxWidth="-Infinity" prefHeight="27.0" prefWidth="233.0" text="Descrição: -" textFill="GREY" wrapText="true" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </children>
     </AnchorPane>
   </children>

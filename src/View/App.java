@@ -1,17 +1,16 @@
 package View;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+
+import org.controlsfx.control.textfield.TextFields;
 
 import Control.CategoriaDao;
 import Control.ControleDao;
@@ -23,8 +22,6 @@ import Model.EntradaExtra;
 import Model.Itens;
 import Model.Lembrete;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +31,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -44,12 +40,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -133,9 +126,13 @@ public class App {
     @FXML
     private TextField txtValUnit;
 
+    private List<String> suggestions = new ArrayList<>();
+    
+    private ItemDao iDao;
+    private CategoriaDao catDao;
 
     private String dir = System.getProperty("user.dir");
-
+    protected static Image DIRLOGO = new Image(System.getProperty("user.dir")+"/ico/icone.png");
 
     //Local Date
         protected static LocalDate  DATENOW = LocalDate.now();
@@ -226,11 +223,11 @@ public static void mascaraNumero(TextField textField){
 private Runnable t1 = new Runnable() {
         public void run() {
             try{
+                
                 System.out.println("processo em andamento...");
-
+                
                 //botaoAnalise.setTooltip(new Tooltip("Dados para análise"));
                 //
-
                 botaoEntrada.setTooltip(new Tooltip("Definir saldo de entrada mensal"));
                 botaoEntrada.setGraphic(new ImageView(dir+"/ico/Entrada.png"));
                 press(botaoEntrada, "/ico/EntradaClick.png", "/ico/Entrada.png");
@@ -259,21 +256,64 @@ private Runnable t1 = new Runnable() {
                 botaoSobre.setGraphic(new ImageView(dir+"/ico/Sobre.png"));
                 press(botaoSobre, "/ico/SobreClick.png", "/ico/Sobre.png");
                 
-
-
+                refreshSuggestions();
+                
+/* 
+txtItem.textProperty().addListener(new ChangeListener<String>() {
+@Override
+    public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
+        // oldValue = Texto anterior a edição
+        // newValue = Texto atual
+        try {
+            
+                System.out.println("11-----------item-"+iDao.listaItem(txtItem.getText()) );
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        
+    }
+});*/
 
             } catch (Exception e){
-                System.out.println("Erro botões: "+ e.getMessage());
+                System.out.println("Erro thread botões: "+ e.getMessage());
             }
 
         }
     };
 
+    private void refreshSuggestions(){
+        try {
+            suggestions.clear();
+            suggestions.addAll(catDao.listaItems());
+            TextFields.bindAutoCompletion(txtCategoria, suggestions);
+                
+            suggestions.clear();
+            suggestions.addAll(iDao.listaItem());
+            TextFields.bindAutoCompletion(txtItem, suggestions);
+        } catch (Exception e) {
+            System.out.println("erro refresh suggestion:" + e.getMessage());
+        }
+        
+    }
 
+    private Locale localeBR = new Locale( "pt", "BR" ); 
+    private String numFormatText(float val,int decimals){
+         NumberFormat num = NumberFormat.getNumberInstance(localeBR);
+         num.setMinimumFractionDigits(decimals);
+         num.setMaximumFractionDigits(decimals);
+
+         return num.format(val);
+    }
+
+//telasobre com reset
         public void initialize(){
 
             
             try{
+                iDao = new ItemDao();
+                catDao = new CategoriaDao();
                 new Thread(t1).start();
 
                 System.out.println("Iniciando...");
@@ -295,23 +335,26 @@ private Runnable t1 = new Runnable() {
                 }
                 //alerta lembrete
                 //verifica lempret
+
+                if(new LembreteDao().checkLemb(MES+"_"+ANO)){
                 FXMLLoader fxmll = new FXMLLoader(getClass().getResource("CheckLembrete.fxml"));
                 Parent root = fxmll.load();
                 Scene tela = new Scene(root);
         
                 Stage stage = new Stage();
                 stage.setScene(tela);
-                stage.setTitle("Teste - check lembtrete");
+                stage.setTitle("Lembretes");
                 stage.initModality(Modality.APPLICATION_MODAL);
+                stage.getIcons().add(App.DIRLOGO);
                 stage.showAndWait();
-
+                }
 System.out.println("cntrol");
 
                 controle = cDao.getControle(mesAberto[0],mesAberto[1]);
 
                 System.out.println(controle.getMes() + controle.getLimite() + controle.getDescricaoEntrada());
-                labelLimite.setText("Limite: R$ " + controle.getLimite());
-                labelGastoMes.setText("Gasto acumulado: R$ " + controle.getTotalGasto());
+                labelLimite.setText("Limite: R$ " + numFormatText(controle.getLimite(),2));
+                labelGastoMes.setText("Gasto acumulado: R$ " +numFormatText( controle.getTotalGasto(),2));
                 labelMesAberto.setText(mes + " - " + ANO + "   Aberto");
 
                 if(controle.getLimite()-(controle.getLimite()*0.10) < controle.getTotalGasto()){
@@ -320,9 +363,9 @@ System.out.println("cntrol");
 
                 float saldo = controle.getValorEntrada();
                 List<EntradaExtra> m = controle.getEntradaExtra();
-System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
+//System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
                 if (m == null || m.isEmpty()) {
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
+                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
                 }else{
                     System.out.println("------");
                     for (int i=0; i < m.size();i++){
@@ -331,7 +374,7 @@ System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
                         System.out.println(m.get(i).getDescricaoEntrada()+m.get(i).getValorEntrada());
                     }
                     System.out.println(saldo);
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
+                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
                 }
 
                 SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999);
@@ -405,7 +448,7 @@ System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
             if(result.isPresent()){
                 float valLimite = Float.parseFloat(result.get());
                 System.out.println("limitedefinido:"+valLimite);
-                labelLimite.setText("Limite: R$ "+ Float.toString(valLimite));
+                labelLimite.setText("Limite: R$ "+ numFormatText(valLimite, 2));
                 cDao.alterarLimite(valLimite);
             }
         } catch (NumberFormatException e ) {
@@ -430,37 +473,24 @@ System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
         FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Fechamento.fxml"));
         Parent root = fxmll.load();
         Scene tela = new Scene(root);
-            
-        //FXMLDocumentController controller = fxmll.getController();
-        //controller.setUserData("Hello World!");
+        
 
         Stage stage = new Stage();
         stage.setScene(tela);
         stage.setTitle("Controle de Gasto Mensal - Fechamento do Mes");
         stage.initModality(Modality.APPLICATION_MODAL);
-        /*
-        stage.setOnHidden(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event){
-                try {
-                    restartApplication();
-                } catch (URISyntaxException | IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    System.out.println("Erro restarAplication");
-                }
-            }
-        });*/
+        stage.getIcons().add(App.DIRLOGO);
+        
         stage.showAndWait();
         
 
         if(Fechamento.close){
             System.out.println(dir);
-            System.out.println("\"" +dir+ "\"");
+            String javafxPath = "C:\\Dev\\Java\\lib\\javafx-sdk-20.0.2\\lib";
             //String comando = "\"" +dir+ "\""; //"\"C:\\Program Files\\program\\sdraw\"";// System.getProperty("user.dir"); dir
-            ProcessBuilder pb = new ProcessBuilder(dir+ "/Controle de Gasto Mensal.jar"); //Runtime.getRuntime().exec( dir );
+            ProcessBuilder pb = new ProcessBuilder(System.getenv("JAVA_HOME")+ "bin\\java","--module-path", javafxPath, "--add-modules", "javafx.controls,javafx.fxml","-jar", "\""+dir+ "\\Controle de Gasto Mensal.jar"+"\""); //Runtime.getRuntime().exec( dir );
             Process exec = pb.start();
-            exec.destroy();
+            //exec.destroy();
             final Node source = (Node) event.getSource();
             final Stage stageF = (Stage) source.getScene().getWindow();
             stageF.close();
@@ -520,7 +550,7 @@ System.out.println(m.get(0).getValorEntrada()+m.size()+"  "+m.isEmpty());
         try {
             float val = controle.getValorEntrada();
             String desc = controle.getDescricaoEntrada();
-System.out.println(val + desc);
+
             TextInputDialog td = new TextInputDialog(); 
             //td.getEditor().setTextFormatter(textFormatter);
             td.setTitle("Definir valor de entrada");
@@ -591,21 +621,8 @@ System.out.println(val + desc);
 
             EntradaExtra ee = new EntradaExtra(descrição, valor);
             cDao.inserirEntradaExtra(ee, MES + "_" + ANO);
-//System.out.println(valor + descrição);
-valTotalEntrada();
-/*
-            float saldo = controle.getValorEntrada();
-                List<EntradaExtra> m = controle.getEntradaExtra();
 
-                if (m == null || m.isEmpty()) {
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
-                }else{
-                    for (int i=0; i > m.size();i++){
-                        saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo);
-                    }
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
-                }
-*/
+            valTotalEntrada();
 
             Alert tid = new Alert(Alert.AlertType.INFORMATION);
             tid.setTitle("Confirmação");
@@ -613,9 +630,6 @@ valTotalEntrada();
             tid.show();
             limparDadosEntrada(event);
 
-          
-               
-                
 
         } catch (NumberFormatException e ) {
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
@@ -660,6 +674,7 @@ valTotalEntrada();
                 CategoriaDao catDao = new CategoriaDao();
                 itemDao.adicionarItem(txtItem.getText());
                 catDao.adicionarCategoria(txtCategoria.getText());
+                refreshSuggestions();
 
                 Alert tid = new Alert(Alert.AlertType.INFORMATION);
                 tid.setTitle("Confirmação");
@@ -668,7 +683,7 @@ valTotalEntrada();
             
                 
                 limparDadosSaida(event);
-                 labelGastoMes.setText("Gasto acumulado: R$ " + controle.getTotalGasto());
+                 labelGastoMes.setText("Gasto acumulado: R$ " + numFormatText(controle.getTotalGasto(),2));
             }else if(!checkPeso.isSelected()){
                 valUnit = Float.parseFloat(txtValUnit.getText());
                 qnt = spinQnt.getValue();
@@ -690,7 +705,7 @@ valTotalEntrada();
                 tid.show();
 
                 limparDadosSaida(event);
-                labelGastoMes.setText("Gasto acumulado: R$ " + controle.getTotalGasto());
+                labelGastoMes.setText("Gasto acumulado: R$ " + numFormatText(controle.getTotalGasto(),2));
             }
            
         } catch (NumberFormatException e ) {
@@ -729,12 +744,12 @@ valTotalEntrada();
                 List<EntradaExtra> m = controle.getEntradaExtra();
 System.out.println(saldo);
                 if (m == null || m.isEmpty()) {
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
+                    labelSaldoMes.setText("Saldo de entrada: R$ " + numFormatText(saldo, 2));
                 }else{
                     for (int i=0; i < m.size();i++){
                         saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo);
                     }
-                    labelSaldoMes.setText("Saldo de entrada: R$ " + saldo);
+                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
                 }
     }
 
@@ -744,24 +759,68 @@ System.out.println(saldo);
             DADOS = MES+"_"+ANO;
             FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Historico.fxml"));
             Parent root = fxmll.load();
-           // root.setUserData(MES+"_"+ANO);
             
             Scene tela = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(tela);
             stage.setTitle("Controle de Gasto Mensal - Histórico");
             stage.initModality(Modality.APPLICATION_MODAL); 
-            
+            stage.getIcons().add(App.DIRLOGO);
+
             stage.showAndWait();
         }catch(IOException e){
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
-            e.getStackTrace();
             tidErr.setTitle("Erro de tela Histórico");
             tidErr.setHeaderText(e.getMessage());
             tidErr.showAndWait();
         }
 
+    }
+
+     @FXML
+    void exportatImportar(ActionEvent event) {
+        try {
+            FXMLLoader fxmll = new FXMLLoader(getClass().getResource("ExportarImportar.fxml"));
+            Parent root = fxmll.load();
+            
+            Scene tela = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(tela);
+            stage.setTitle("Controle de Gasto Mensal - Exportar/Importar");
+            stage.initModality(Modality.APPLICATION_MODAL); 
+            stage.getIcons().add(App.DIRLOGO);
+
+            stage.show();
+        } catch (Exception e) {
+            Alert tidErr = new Alert(Alert.AlertType.ERROR);
+            tidErr.setTitle("Erro de tela Exporar/Importar");
+            tidErr.setHeaderText(e.getMessage());
+            tidErr.showAndWait();
+        }
+    }
+
+
+      @FXML
+    void sobre(ActionEvent event) {
+        try {
+            FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Sobre.fxml"));
+            Parent root = fxmll.load();
+            
+            Scene tela = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(tela);
+            stage.setTitle("Controle de Gasto Mensal - Sobre");
+            stage.initModality(Modality.APPLICATION_MODAL); 
+            stage.getIcons().add(App.DIRLOGO);
+
+            stage.show();
+        } catch (Exception e) {
+            Alert tidErr = new Alert(Alert.AlertType.ERROR);
+            tidErr.setTitle("Erro de tela Sobre");
+            tidErr.setHeaderText(e.getMessage());
+            tidErr.showAndWait();
+        }
     }
 
 }

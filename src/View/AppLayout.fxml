@@ -44,7 +44,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.App">
+<VBox prefHeight="470.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.App">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" minHeight="470.0" minWidth="689.6" prefHeight="470.0" prefWidth="690.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS">
       <children>
@@ -113,9 +113,9 @@
                   <Button fx:id="botaoFecharAbrir" mnemonicParsing="false" onAction="#abrirFecharMes" style="-fx-background-color: #66000000;" text="Button" />
                   <Button fx:id="botaoLembrete" mnemonicParsing="false" onAction="#criarLembrete" style="-fx-background-color: #66000000;" text="Button" />
                   <Button fx:id="botaoEntrada" mnemonicParsing="false" onAction="#definirEntrada" style="-fx-background-color: #66000000;" text="Button" />
-                  <Button fx:id="botaoExportar" mnemonicParsing="false" style="-fx-background-color: #66000000;" text="Button" />
-                  <Button fx:id="botaoSobre" mnemonicParsing="false" style="-fx-background-color: #66000000;" text="Button" />
-                  <Button fx:id="botaoAnalise" disable="true" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="botaoExportar" mnemonicParsing="false" onAction="#exportatImportar" style="-fx-background-color: #66000000;" text="Button" />
+                  <Button fx:id="botaoSobre" mnemonicParsing="false" onAction="#sobre" style="-fx-background-color: #66000000;" text="Button" />
+                  <Button fx:id="botaoAnalise" mnemonicParsing="false" text="Button" visible="false" />
               </buttons>
                <padding>
                   <Insets left="-14.0" right="8.0" />
@@ -123,7 +123,7 @@
             </ButtonBar>
             <Pane layoutX="8.0" layoutY="75.0" prefHeight="42.0" prefWidth="674.0">
                <children>
-                  <Label fx:id="labelMesAberto" layoutX="14.0" layoutY="6.0" prefHeight="30.0" prefWidth="249.0" text="Setembro - 2023    Aberto" textFill="GREY">
+                  <Label fx:id="labelMesAberto" layoutX="3.0" layoutY="6.0" prefHeight="30.0" prefWidth="239.0" text="Setembro - 2023   Aberto" textFill="GREY">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -131,12 +131,12 @@
                         <Insets right="6.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="labelGastoMes" layoutX="263.0" layoutY="12.0" prefHeight="20.0" prefWidth="158.0" text="Gasto acumulado: 99999,99" textFill="GREY" />
-                  <Label fx:id="labelSaldoMes" layoutX="421.0" layoutY="13.0" prefHeight="17.0" prefWidth="158.0" text="Saldo entrada: 99999,99" textFill="GREY">
+                  <Label fx:id="labelGastoMes" alignment="CENTER" layoutX="242.0" layoutY="11.0" prefHeight="20.0" prefWidth="170.0" text="Gasto acumulado R$: 99.999,99" textAlignment="CENTER" textFill="GREY" />
+                  <Label fx:id="labelSaldoMes" alignment="CENTER" layoutX="415.0" layoutY="12.0" prefHeight="17.0" prefWidth="160.0" text="Saldo entrada R$: 99.999,99" textFill="GREY">
                      <padding>
                         <Insets right="4.0" />
                      </padding></Label>
-                  <Label fx:id="labelLimite" layoutX="579.0" layoutY="12.0" prefHeight="17.0" prefWidth="101.0" text="Limite: 99999,99" textFill="GREY" />
+                  <Label fx:id="labelLimite" alignment="CENTER" layoutX="569.0" layoutY="12.0" prefHeight="17.0" prefWidth="112.0" text="Limite R$: 99.999,99" textFill="GREY" />
                </children>
             </Pane>
             <Pane layoutX="12.0" layoutY="310.0" prefHeight="146.0" prefWidth="666.0" style="-fx-border-color: #808080;">

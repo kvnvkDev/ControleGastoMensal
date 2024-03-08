@@ -1,8 +1,9 @@
 package View;
 
-import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import Control.ItensDao;
 import Model.Controle;
@@ -12,11 +13,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 public class Historico {
 
@@ -47,8 +53,29 @@ public class Historico {
     @FXML
     private ComboBox<String> selectMes;
 
+
     @FXML
-    private ListView<String[]> tabelaItens;
+    private TableView<Itens> tabelaItens;
+
+     @FXML
+    private TableColumn<Itens, String> colCat;
+
+    @FXML
+    private TableColumn<Itens, Boolean> colDest;
+
+    @FXML
+    private TableColumn<Itens, String> colItem;
+
+    @FXML
+    private TableColumn<Itens, Float> colPeso;
+
+    @FXML
+    private TableColumn<Itens, String> colQnt;
+
+    @FXML
+    private TableColumn<Itens, Float> colVal;
+
+
     
     @FXML
     private Label labelTotal;
@@ -56,6 +83,16 @@ public class Historico {
 
     private Controle controle;
     private ItensDao iDao;
+
+    private Locale localeBR = new Locale( "pt", "BR" ); 
+    private String numFormatText(float val,int decimals){
+         NumberFormat num = NumberFormat.getNumberInstance(localeBR);
+         num.setMinimumFractionDigits(decimals);
+         num.setMaximumFractionDigits(decimals);
+         
+
+         return num.format(val);
+    }
 
     public void initialize(){
 
@@ -70,54 +107,141 @@ public class Historico {
             String mes = App.mesNome(mesAno[0]);
             labelMes.setText(mes + " - " + mesAno[1]);
 
+/* 
 
+            path java reiniciar app
+            metodo init primeor acesso(criaar controle) ok - teste
+            metodo tread move dados antigos p tabela storico  xx
+differenca(insere no fechamento)   ok
+exportr ok
+sobre
+valor RS,00 historico fechamento  ok
+
+-testes*primeroacesso/fechaento
+*/
 
             controle = App.cDao.getControle(mesAno[0], mesAno[1]);
 
-            labelLimite.setText("Limite: R$ "+controle.getLimite());
+            labelLimite.setText("Limite: R$ "+numFormatText(controle.getLimite(),2));
 
-            labelSaldo.setText("Saldo Total: R$ "+controle.getValorEntrada());
+            labelSaldo.setText("Saldo Total: R$ "+numFormatText(controle.getValorEntrada(),2));
             labelSaldoDescricao.setText("Descrição: "+controle.getDescricaoEntrada());
 
             float saldo = 0;
             String desc = "";
             List<EntradaExtra> m = controle.getEntradaExtra();
             if (m == null || m.isEmpty()) {
-                labelSaldoExtra.setText("Saldo extra: R$ ");System.out.println("m"+m);
+                labelSaldoExtra.setText("Saldo extra: R$ ");
                 labelDescricaoExtra.setText("Descrição: ");
             }else{System.out.println("map"+m);
                 for (int i=0; i < m.size();i++){
                     saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo+m.get(i).getValorEntrada());
-                    desc = desc + m.get(i).getDescricaoEntrada() + "\n";
+                    desc = desc + m.get(i).getDescricaoEntrada() +   ": "+ numFormatText(m.get(i).getValorEntrada(),2) +"\n";
                 }
-                labelSaldoExtra.setText("Saldo extra: R$ " + saldo);
+                labelSaldoExtra.setText("Saldo extra: R$ " + numFormatText(saldo, 2));
                 labelDescricaoExtra.setText("Descrição: "+ desc);
-                labelSaldo.setText("Saldo Total: R$ "+(controle.getValorEntrada() + saldo));
+                labelSaldo.setText("Saldo Total: R$ "+numFormatText((controle.getValorEntrada() + saldo),2));
             }
         
-            labelTotal.setText("Total Gasto: R$ "+controle.getTotalGasto());
+            labelTotal.setText("Total Gasto: R$ "+numFormatText(controle.getTotalGasto(),2));
 
             iDao = new ItensDao();
             ArrayList<Itens> al = iDao.listaItens(mesAno[0]+"_"+mesAno[1]);
-            ObservableList<String[]> list = FXCollections.observableArrayList();
-            ObservableList<String[]> listDest = FXCollections.observableArrayList();
+            ObservableList<Itens> list = FXCollections.observableArrayList();
+            ObservableList<Itens> listDest = FXCollections.observableArrayList();
+           // Locale localeBR = new Locale( "pt", "BR" ); 
+
+            colQnt.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
+            colItem.setCellValueFactory(new PropertyValueFactory<>("item"));
+            colCat.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+
+            colPeso.setCellValueFactory(new PropertyValueFactory<>("peso"));
+            colPeso.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
+    @Override
+    public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
+        return new TableCell<Itens, Float>() {
+            @Override
+            protected void updateItem(Float item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty || item == 0) {
+                    setText(null);
+                } else {
+                    //NumberFormat kilo = NumberFormat.getNumberInstance(localeBR);
+                    //kilo.setMinimumFractionDigits(3);
+                    //kilo.setMaximumFractionDigits(3);
+                    setText(numFormatText(item,3));
+                    setAlignment(Pos.CENTER_RIGHT);
+                }
+            }
+        };
+    }
+});
+
+            colVal.setCellValueFactory(new PropertyValueFactory<>("valorCalculado"));
+            colVal.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
+    @Override
+    public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
+        return new TableCell<Itens, Float>() {
+            @Override
+            protected void updateItem(Float item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    //NumberFormat dinheiro = NumberFormat.getNumberInstance(localeBR);
+                    //dinheiro.setMinimumFractionDigits(2);
+                    //dinheiro.setMaximumFractionDigits(2);
+                    setText(numFormatText(item,2));
+                    setAlignment(Pos.CENTER_RIGHT);
+                }
+            }
+        };
+    }
+});
+            
+            colDest.setCellValueFactory(new PropertyValueFactory<>("destaque"));
+            colDest.setCellFactory(new Callback<TableColumn<Itens, Boolean>, TableCell<Itens, Boolean>>() {
+    @Override
+    public TableCell<Itens, Boolean> call(TableColumn<Itens, Boolean> param) {
+        return new TableCell<Itens, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item ? "✔" : " ");
+                    if (item) {
+                        // Muda a cor da linha para verde se a palavra for "Sim"
+                        getTableRow().setStyle("-fx-background-color: lightgreen");
+                    }else {
+                        // Limpa o estilo se a palavra for "Não"
+                        getTableRow().setStyle("");
+                    }
+                }
+            }
+        };
+    }
+});
+
+
             if(al.size() > 1){
-                for(int i =0; i <= al.size();i++){
+                for(int i =0; i < al.size();i++){
                     if(al.get(i).isDestaque()){
                         String qnt = String.valueOf(al.get(i).getQuantidade());
                         String peso = String.valueOf(al.get(i).getPeso());
                         String val = String.valueOf(al.get(i).getValorCalculado());
-                        listDest.add(new String[]{qnt,peso,al.get(i).getItem(),al.get(i).getCategoria(),val});
+                        listDest.add(al.get(i));
                     }else{
                         String qnt = String.valueOf(al.get(i).getQuantidade());
                         String peso = String.valueOf(al.get(i).getPeso());
                         String val = String.valueOf(al.get(i).getValorCalculado());
-                        list.add(new String[]{qnt,peso,al.get(i).getItem(),al.get(i).getCategoria(),val});
+                        list.add(al.get(i));
                         //list.add(al.get(i));
                     }
                 }
             }
-            
+
             tabelaItens.setItems(FXCollections.concat(listDest,list));
             
 

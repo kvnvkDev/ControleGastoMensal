@@ -95,7 +95,6 @@ public class LembreteDao {
             List<Lembrete> lemb = new ArrayList<Lembrete>();
 
             String[] s = mes_ano.split("_");
-            System.out.println(query + s[0] + rs.next() +"=="+ rs.toString());
             while (rs.next()) {
 
                 Lembrete l = new Lembrete(rs.getShort("id"),s[0], s[1], rs.getString("descricao"), true);
@@ -133,4 +132,31 @@ public class LembreteDao {
             return false;
         }
     }
+
+
+    public boolean checkLemb(String mes_ano){
+        try{
+            abrirConexao();
+            String query = "select id from Lembrete where mes_ano = '"+mes_ano+"' AND emFuturo = 1";
+            
+            stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        }catch(SQLException e){
+            System.out.print("Erro ao buscar dados"+ e.getMessage());
+            return false;
+        }finally {
+            try {
+                if (con != null) {
+                    con.close();
+                    System.out.println("Fechando conexão");
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+
 }

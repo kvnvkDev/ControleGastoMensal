@@ -40,8 +40,8 @@ public class ItensDao {
             boolean dest = it.isDestaque();
             int qnt = it.getQuantidade();
 
-        String query = " insert into itens(mes_ano,emPeso,peso,item,categoria,valorCalculado,valorUnitario,emDestaque) "
-        +" values(?,?,?,?,?,?,?,?);";
+        String query = " insert into itens(mes_ano,emPeso,peso,item,categoria,valorCalculado,valorUnitario,emDestaque,qnt) "
+        +" values(?,?,?,?,?,?,?,?,?);";
 
         stmt = con.prepareStatement(query);
         //stmt.setInt(1,null);

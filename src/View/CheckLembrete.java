@@ -7,8 +7,6 @@ import java.util.Optional;
 import Control.LembreteDao;
 import Model.Lembrete;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -16,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
@@ -75,8 +72,10 @@ public class CheckLembrete {
 
         try{
             lDao = new LembreteDao();
-            List<Lembrete> lista = lDao.buscarLembrete("12_2023");//(App.MES + "_" + App.ANO);
-            if(lista.isEmpty()){System.out.println("vasio");}
+            List<Lembrete> lista = lDao.buscarLembrete(App.MES+"_"+App.ANO);//(App.MES + "_" + App.ANO);
+            if(lista.isEmpty()||lista.size()<=0){
+                System.out.println("vasio");
+            }
 
             for(int i=0; i<lista.size(); i++){
                 listaLemb.getItems().add(lista.get(i).getId() + ".  " +lista.get(i).getDescricao());

@@ -1,8 +1,13 @@
 package View;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import Control.ItemDao;
 import javafx.beans.value.ChangeListener;
@@ -11,24 +16,60 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-
+import javafx.stage.Stage;
 
 import org.controlsfx.control.textfield.TextFields;
 
 public class testeApp{
 
-
+private String dir = System.getProperty("user.dir");
 
     
     @FXML
     private Button botao;
 
     @FXML
-    void click(ActionEvent event) {
+    void click(ActionEvent event)  {
         System.out.println("111111111111ck");
+try {
+         System.out.println("\"" +dir+ "\"" + System.getenv("JAVA_HOME"));
+         String javafxPath = "C:\\Dev\\Java\\lib\\javafx-sdk-20.0.2\\lib";
+            //String comando = "\"" +dir+ "\""; //"\"C:\\Program Files\\program\\sdraw\"";// System.getProperty("user.dir"); dir
+            ProcessBuilder pb = new ProcessBuilder(System.getenv("JAVA_HOME")+ "bin\\java","--module-path", javafxPath, "--add-modules", "javafx.controls,javafx.fxml","-jar", "\""+dir+ "\\Controle de Gasto Mensal.jar"+"\""); //Runtime.getRuntime().exec( dir );
+            Process exec;
+            
+            //pb.redirectErrorStream(true); 
+                exec = pb.start();
+/*
+                // Lê a saída do processo
+InputStream is = exec.getInputStream();
+InputStreamReader isr = new InputStreamReader(is);
+BufferedReader br = new BufferedReader(isr);
+String line;
+while ((line = br.readLine()) != null) {
+    System.out.println(line);
+}
+
+// Aguarda o processo terminar
+int exitCode = exec.waitFor();
+System.out.println("\nProcesso terminou com o código: " + exitCode);
+*/
+                System.out.println(exec.getErrorStream().toString()+"xx"+exec.getInputStream().read());
+                //exec.destroy();
+           
+            
+            final Node source = (Node) event.getSource();
+            final Stage stageF = (Stage) source.getScene().getWindow();
+            stageF.close();
+
+ } catch (IOException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
         
     }
 
@@ -57,17 +98,22 @@ public class testeApp{
    ItemDao iDao = new ItemDao();
 
    
-ObservableList<String> suggestions = FXCollections.observableArrayList();
+List<String> suggestions = new ArrayList<>();
+suggestions.add("dir");
+suggestions.add("diffggr");
+suggestions.add("difgdfgnr");
+suggestions.add("tttttt");
+suggestions.add("02502");
 
            // ComboBox<String> comboBox = new ComboBox<String>(suggestions);
 
-       // TextFields.bindAutoCompletion(txtTeste, suggestions);
+       //TextFields.bindAutoCompletion(txtTeste, suggestions);
     
-    AutoCompleteTextField tf = new AutoCompleteTextField();
+   // AutoCompleteTextField tf = new AutoCompleteTextField();
     //suggestions.addAll(Arrays.asList("AA", "AB", "AC","BCA"));
-    tf.getEntries().addAll(suggestions);
+  //  tf.getEntries().addAll(suggestions);
 
-    txtTeste = tf;
+  //  txtTeste = tf;
      //  --add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls
 System.out.println("suggestions.get(0).toString())");
        /* 
@@ -85,7 +131,7 @@ System.out.println("suggestions.get(0).toString())");
         });
 
 */
-
+/* 
 txtTeste.textProperty().addListener(new ChangeListener<String>() {
 @Override
     public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
@@ -104,13 +150,19 @@ txtTeste.textProperty().addListener(new ChangeListener<String>() {
         
     }
 });
-
+*/
 
         }catch(Exception e){
-System.out.println("erro teste" + e.getMessage());
+System.out.println("erro teste****" + e.getMessage()+"**");
+e.getStackTrace();
         }
         
 
     }
     
+
+
+   
+
+
 }

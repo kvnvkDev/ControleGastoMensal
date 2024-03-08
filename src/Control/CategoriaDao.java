@@ -2,7 +2,9 @@ package Control;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Conexao.Conexao;
 
@@ -53,5 +55,24 @@ public class CategoriaDao {
         
     }
 
+
+    
+
+    public ArrayList<String> listaItems() throws SQLException{
+        String query = "select categoria from Categoria";
+        stmt = con.prepareStatement(query);
+        //stmt.setString(1,'%'+ pesquisa+'%');
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<String> lista = new ArrayList<String>();
+
+        while (rs.next()) {
+            lista.add(rs.getString("categoria"));
+            //System.out.println(rs.getString("item"));
+        }
+
+        return lista;
+    }
 
 }

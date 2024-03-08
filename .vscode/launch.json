@@ -46,6 +46,13 @@
             "request": "launch",
             "mainClass": "teste",
             "projectName": "Controle de Gasto Mensal_22d151d6"
+        },
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "--add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED"
         }
     ]
 }
