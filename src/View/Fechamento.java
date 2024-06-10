@@ -5,8 +5,10 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import Model.Controle;
 import Model.EntradaExtra;
@@ -20,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -63,7 +66,8 @@ public class Fechamento {
 
     private float dif;
 
-    public static boolean close;
+    public static boolean close = false;
+
          public void restartApplication(ActionEvent event) throws URISyntaxException, IOException{
             try {
                 close = true;
@@ -91,7 +95,7 @@ public class Fechamento {
 
         try{
         labelTitulo.setText("Fechamento do mês de " + App.mes);
-System.out.println("fechamento");
+
         labelLimite.setText("Limite: R$ "+numFormatText(App.controle.getLimite(),2));
 
         labelSaldo.setText("Saldo: R$ "+numFormatText(App.controle.getValorEntrada(),2));
@@ -111,8 +115,6 @@ System.out.println("fechamento");
             labelSaldoExtra.setText("Saldo extra: R$ " + numFormatText(saldo,2));
             labelDescricaoExtra.setText("Descrição: "+ desc);
         }
-        
-        
 
         labelTotal.setText("Total Gasto: R$ "+ numFormatText(App.controle.getTotalGasto(),2));
 
@@ -127,44 +129,51 @@ System.out.println("fechamento");
     @FXML
     void fecharMes(ActionEvent event) throws URISyntaxException, IOException{
 
-        
-        try{
-            //float valDif = 0;
-            LocalDate d = LocalDate.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES), 01);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Fechamento do mês");
+        alert.setContentText("Após fechar o mês não será possível fazer alterações no controle deste mês.");
+        alert.setHeaderText("Deseja fechar o mês " + App.mes + "?");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        @SuppressWarnings("rawtypes")
+        Optional option = alert.showAndWait();
 
-            if(d.isBefore(App.DATENOW)){
-            App.controle.setDiferenca(dif);
-
-            App.cDao.fecharControle(App.MES + "_" + App.ANO,dif);
-
-            Controle nControle = new Controle(String.valueOf(App.DATENOW.getMonthValue()), String.valueOf(App.DATENOW.getYear()), App.controle.getLimite(), App.controle.getValorEntrada(), App.controle.getDescricaoEntrada(), true);
-            App.cDao.criarControle(nControle);
-
-            if(checkDif.isSelected() && dif > 0){
-                //valDif = App.controle.getDiferenca();
-                EntradaExtra ee = new EntradaExtra("Saldo do mes " + App.mes, dif);
-                System.out.println("insrindoee" + String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
-                App.cDao.inserirEntradaExtra(ee, String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
-                System.out.println("inserido+++");
-                 //fechar e abrir para atualizar dados da tela principal
-           
-            }
-            restartApplication(event);
-        }else{
-            Alert tidErr = new Alert(Alert.AlertType.INFORMATION);
+        if(option.isPresent()){
             
-                    tidErr.setTitle("O mês em aberto ainda não acabou!");
-                    tidErr.setContentText("Caso queira abrir o controle do mês seguinte, aguarde o fim do mês atual");
-                    tidErr.initModality(Modality.APPLICATION_MODAL);
-                    //tidErr.initOwner();
-                    tidErr.showAndWait();
-        }
-        }catch(SQLException e){
-            System.out.println("Erro fechar mes" + e.getMessage());
-            Alert tidErr = new Alert(Alert.AlertType.ERROR);
-            tidErr.setTitle("Erro fechamento do mês");
-            tidErr.setHeaderText(e.getMessage());
-            tidErr.showAndWait();
+            try{
+                YearMonth ym = YearMonth.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES));
+                LocalDate d = ym.atEndOfMonth();//LocalDate.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES), n);
+
+                if(d.isBefore(App.DATENOW)){
+                App.controle.setDiferenca(dif);
+
+                App.cDao.fecharControle(App.MES + "_" + App.ANO,dif);
+
+                Controle nControle = new Controle(String.valueOf(App.DATENOW.getMonthValue()), String.valueOf(App.DATENOW.getYear()), App.controle.getLimite(), App.controle.getValorEntrada(), App.controle.getDescricaoEntrada(), true);
+                App.cDao.criarControle(nControle);
+
+                if(checkDif.isSelected() && dif > 0){
+                    EntradaExtra ee = new EntradaExtra("Saldo do mes " + App.mes, dif);
+                    //System.out.println("insrindoee" + String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
+                    App.cDao.inserirEntradaExtra(ee, String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
+           
+                }
+                restartApplication(event);
+                }else{
+                    Alert Err = new Alert(Alert.AlertType.INFORMATION);
+            
+                    Err.setTitle("O mês em aberto ainda não acabou!");
+                    Err.setContentText("Caso queira abrir o controle do mês seguinte, aguarde o fim do mês atual");
+                    Err.initModality(Modality.APPLICATION_MODAL); 
+                    Err.showAndWait();
+                }
+            }catch(SQLException e){
+                System.out.println("Erro fechar mes" + e.getMessage());
+                Alert tidErr = new Alert(Alert.AlertType.ERROR);
+                tidErr.setTitle("Erro fechamento do mês");
+                tidErr.setHeaderText(e.getMessage());
+                tidErr.showAndWait();
+            }
+
         }
     }
 
@@ -174,7 +183,6 @@ System.out.println("fechamento");
             App.DADOS = App.MES+"_"+App.ANO;//testtar
             FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Historico.fxml"));
             Parent root = fxmll.load();
-           // root.setUserData(MES+"_"+ANO);
             
             Scene tela = new Scene(root);
             Stage stage = new Stage();

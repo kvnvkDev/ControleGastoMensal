@@ -1,28 +1,22 @@
 package View;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import Control.ItemDao;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import org.controlsfx.control.textfield.TextFields;
 
 public class testeApp{
 
@@ -32,10 +26,23 @@ private String dir = System.getProperty("user.dir");
     @FXML
     private Button botao;
 
+    
+    @FXML
+    private Label label;
+
     @FXML
     void click(ActionEvent event)  {
         System.out.println("111111111111ck");
 try {
+
+   
+     Alert tidErr = new Alert(Alert.AlertType.ERROR);
+     //tidErr.initOwner((Button)event.getSource().getScene().getWindow());
+     ((Stage)tidErr.getDialogPane().getScene().getWindow()).getIcons().add(App.DIRLOGO);
+            tidErr.setTitle("Erro de tela Sobre");
+            tidErr.setHeaderText("!");
+            tidErr.showAndWait();
+   
          System.out.println("\"" +dir+ "\"" + System.getenv("JAVA_HOME"));
          String javafxPath = "C:\\Dev\\Java\\lib\\javafx-sdk-20.0.2\\lib";
             //String comando = "\"" +dir+ "\""; //"\"C:\\Program Files\\program\\sdraw\"";// System.getProperty("user.dir"); dir
@@ -77,9 +84,16 @@ System.out.println("\nProcesso terminou com o código: " + exitCode);
     private TextField txtTeste;
 
     public void initialize(){
+System.out.println("!!!efdfg");
+        YearMonth ym = YearMonth.of(2024, 3);
+            LocalDate d = ym.atEndOfMonth();//LocalDate.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES), n);
+
+            System.out.println(App.DATENOW.isBefore(LocalDate.of(2024, 3, 18)));
+            System.out.println(d);
+            System.out.println(App.DATENOW);
         
         try{
-
+label.setGraphic(new ImageView(App.DIRLOGO));//new ImageView(System.getProperty("user.dir") + "/ico/github.png"));
             
             /* 
         FXMLLoader fxmll = new FXMLLoader(getClass().getResource("CheckLembrete.fxml"));
@@ -108,8 +122,7 @@ suggestions.add("02502");
            // ComboBox<String> comboBox = new ComboBox<String>(suggestions);
 
        //TextFields.bindAutoCompletion(txtTeste, suggestions);
-    
-   // AutoCompleteTextField tf = new AutoCompleteTextField();
+     // AutoCompleteTextField tf = new AutoCompleteTextField();
     //suggestions.addAll(Arrays.asList("AA", "AB", "AC","BCA"));
   //  tf.getEntries().addAll(suggestions);
 

@@ -1,7 +1,6 @@
 package Model;
 
 import java.util.List;
-import java.util.Map;
 
 public class Controle {
     
@@ -102,7 +101,7 @@ public class Controle {
     public void setDiferenca(float diferenca) {
         this.diferenca = diferenca;
     }
-    public boolean isEmAberto() {
+    public boolean EmAberto() {
         return emAberto;
     }
     public void setEmAberto(boolean emAberto) {

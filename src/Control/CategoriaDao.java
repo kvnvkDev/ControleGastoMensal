@@ -32,7 +32,6 @@ public class CategoriaDao {
         +" values(?);";
 
         stmt = con.prepareStatement(query);
-        //stmt.setInt(1,null);
         stmt.setString(1,cat);
 
         stmt.execute();
@@ -61,7 +60,6 @@ public class CategoriaDao {
     public ArrayList<String> listaItems() throws SQLException{
         String query = "select categoria from Categoria";
         stmt = con.prepareStatement(query);
-        //stmt.setString(1,'%'+ pesquisa+'%');
 
         ResultSet rs = stmt.executeQuery();
 
@@ -69,7 +67,6 @@ public class CategoriaDao {
 
         while (rs.next()) {
             lista.add(rs.getString("categoria"));
-            //System.out.println(rs.getString("item"));
         }
 
         return lista;

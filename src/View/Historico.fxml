@@ -42,7 +42,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Historico">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Historico">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="400.0" prefWidth="670.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS">
          <children>
@@ -71,8 +71,8 @@
                 <TableColumn fx:id="colDest" prefWidth="63.199981689453125" text="Destaque" />
                   <TableColumn fx:id="colPeso" prefWidth="76.800048828125" text="Peso" />
                   <TableColumn fx:id="colItem" prefWidth="208.79998779296875" text="Item" />
-                  <TableColumn fx:id="colCat" minWidth="6.39996337890625" prefWidth="133.5999755859375" text="Categoria" />
-                  <TableColumn fx:id="colVal" prefWidth="76.80010986328125" text="Valor Calc" />
+                  <TableColumn fx:id="colCat" minWidth="6.39996337890625" prefWidth="121.0" text="Categoria" />
+                  <TableColumn fx:id="colVal" prefWidth="82.0" text="Valor Calc" />
               </columns>
             </TableView>
             <ScrollPane layoutX="16.0" layoutY="35.0" prefHeight="78.0" prefWidth="240.0" style="-fx-background-color: #000000;">

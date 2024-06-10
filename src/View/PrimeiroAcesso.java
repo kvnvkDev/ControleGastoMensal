@@ -37,7 +37,6 @@ public class PrimeiroAcesso {
 
     public void initialize(){
         try {
-            App.mascaraNumero(txtDescEntrada);
             App.mascaraNumero(txtValEntrada);
             App.mascaraNumero(txtValLimite);
 
@@ -49,7 +48,7 @@ public class PrimeiroAcesso {
             System.out.println(e.getMessage());
             tidErr.setTitle("Erro primeiro acesso");
             tidErr.setHeaderText(e.getMessage());
-            tidErr.showAndWait();
+            tidErr.show();
         }
         
     }
@@ -57,13 +56,24 @@ public class PrimeiroAcesso {
        @FXML
     void iniciar(ActionEvent event) {
         try {
-            Controle c = new Controle(mes,ano,Float.parseFloat(txtValLimite.getText()),Float.parseFloat(txtValEntrada.getText()),txtDescEntrada.getText(),true);
-            AppMain.CDAO.criarControle(c);
+            if(txtDescEntrada.getText() == "" || txtValEntrada.getText()=="" ||txtValLimite.getText()==""){
+                Alert tidErr = new Alert(Alert.AlertType.ERROR);
+                tidErr.setTitle("Ainda falta informações");
+                tidErr.setHeaderText("Preencha todos os campos para iniciar.");
+                tidErr.showAndWait();
+            }else{
+                Controle c = new Controle(mes,ano,Float.parseFloat(txtValLimite.getText()),Float.parseFloat(txtValEntrada.getText()),txtDescEntrada.getText(),true);
+                AppMain.CDAO.criarControle(c);
+                System.out.println("Criado novo controle");
 
+                ProcessBuilder pb = new ProcessBuilder("cscript",System.getProperty("user.dir")+ "\\exec.vbs");
+                Process exec = pb.start();
             
-            final Node source = (Node) event.getSource();
-            final Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+                final Node source = (Node) event.getSource();
+                final Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
+            }
+            
         } catch (Exception e) {
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());

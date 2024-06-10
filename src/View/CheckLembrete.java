@@ -33,34 +33,7 @@ public class CheckLembrete {
 
      @FXML
     private Button botaoAdiar;
-/* 
-    @FXML
-    private void listViewMouseDoubleClicked(EventType<MouseEvent> mouseClicked) throws NumberFormatException, SQLException{
-        
-        if(mouseClicked.getClickCount() > 1){
-            String s = listaLemb.getSelectionModel().getSelectedItem();
-            String[] id = s.split(".  ");
-
-            Alert tidErr = new Alert(Alert.AlertType.CONFIRMATION);
-            
-                    tidErr.setTitle("Deseja adiar o lembrete "+ id[0] + "?");
-                    tidErr.setHeaderText(id[1]);
-                    tidErr.setContentText("Ao clicar em OK lembrete será adiado para o próximo mês.");
-                    tidErr.initModality(Modality.APPLICATION_MODAL);
-                    //00
-                    //ButtonType show = new ButtonType("Show in Explorer");
-                    //tidErr.getButtonTypes().add(show);
-
-                    Optional<ButtonType> option = tidErr.showAndWait();
-                    if (option.get() == ButtonType.OK) {
-                        lDao.adiarLembrete(Short.parseShort(id[0]), "12", "2023");
-                    }
-            
-                }
-            
-    }
-*/
-
+  
 
     protected LembreteDao lDao;
     protected Lembrete lemb;
@@ -68,13 +41,12 @@ public class CheckLembrete {
 
     public void initialize(){
         
-        System.out.println("init lemb");
 
         try{
             lDao = new LembreteDao();
             List<Lembrete> lista = lDao.buscarLembrete(App.MES+"_"+App.ANO);//(App.MES + "_" + App.ANO);
             if(lista.isEmpty()||lista.size()<=0){
-                System.out.println("vasio");
+                System.out.println("vazio");
             }
 
             for(int i=0; i<lista.size(); i++){
@@ -103,20 +75,6 @@ public class CheckLembrete {
         }
     }
 });
-/* 
-listaLemb.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-    @Override
-    public void handle(MouseEvent click) {
-
-        if (click.getClickCount() == 3) {
-           //Use ListView's getSelected Item
-           
-           //use this to do whatever you want to. Open Link etc.
-        }
-    }
-});*/
-       
         }catch(SQLException e){
             Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
@@ -129,7 +87,7 @@ listaLemb.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 
     public void adiarLemb(){
-        if(listaLemb.getSelectionModel().getSelectedIndex() > 0){
+        if(listaLemb.getSelectionModel().getSelectedIndex() >= 0){
             String s = listaLemb.getSelectionModel().getSelectedItem();System.out.println(s);
             int ix = listaLemb.getSelectionModel().getSelectedIndex();System.out.println(ix);
             String[] id = s.split(".  ");
@@ -140,9 +98,7 @@ listaLemb.setOnMouseClicked(new EventHandler<MouseEvent>() {
             tidErr.setHeaderText(id[1]);
             tidErr.setContentText("Ao clicar em OK lembrete será adiado para o próximo mês.");
             tidErr.initModality(Modality.APPLICATION_MODAL);
-                    //00
-                    //ButtonType show = new ButtonType("Show in Explorer");
-                    //tidErr.getButtonTypes().add(show);
+                    
 
             Optional<ButtonType> option = tidErr.showAndWait();
             if (option.get() == ButtonType.OK) {
@@ -177,9 +133,7 @@ listaLemb.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     lDao.desativarLembrete(Short.parseShort(id[0]));
                 }
             }
-            //System.out.println("-"+lvSelModel.getSelectedItems().toString());//99999******************
-           
-            //System.out.println("/"+listaLemb.getSelectionModel().getSelectedItems());//99999******************
+
             Stage stage = (Stage) botaoOk.getScene().getWindow();
     stage.close();
 

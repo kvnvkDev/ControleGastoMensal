@@ -87,7 +87,7 @@ public class LembreteDao {
         try{
             abrirConexao();
             String query = "select id,descricao from Lembrete where mes_ano = '"+mes_ano+"' AND emFuturo = 1";
-            System.out.println(query);
+            
             stmt = con.prepareStatement(query);
             //stmt.setString(1, mes_ano);
             ResultSet rs = stmt.executeQuery();
@@ -104,7 +104,7 @@ public class LembreteDao {
 
             return lemb;
         }catch(SQLException e){
-            System.out.print("Erro ao buscar dados"+ e.getMessage());
+            System.out.print("Erro ao buscar lembrete"+ e.getMessage());
             return null;
         }finally {
             try {

@@ -102,23 +102,11 @@ public class Historico {
             selectAno.getItems().setAll("2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034","2035","2036","2037","2038","2039","2040","2041","2042","2043","2044","2045","2046","2047","2048","2049","2050","2051","2052");
 
 
-            String par = App.DADOS; //(String) labelMes.getParent().getUserData();
+            String par = App.DADOS; 
             String mesAno[] = par.split("_");
             String mes = App.mesNome(mesAno[0]);
             labelMes.setText(mes + " - " + mesAno[1]);
 
-/* 
-
-            path java reiniciar app
-            metodo init primeor acesso(criaar controle) ok - teste
-            metodo tread move dados antigos p tabela storico  xx
-differenca(insere no fechamento)   ok
-exportr ok
-sobre
-valor RS,00 historico fechamento  ok
-
--testes*primeroacesso/fechaento
-*/
 
             controle = App.cDao.getControle(mesAno[0], mesAno[1]);
 
@@ -149,7 +137,6 @@ valor RS,00 historico fechamento  ok
             ArrayList<Itens> al = iDao.listaItens(mesAno[0]+"_"+mesAno[1]);
             ObservableList<Itens> list = FXCollections.observableArrayList();
             ObservableList<Itens> listDest = FXCollections.observableArrayList();
-           // Locale localeBR = new Locale( "pt", "BR" ); 
 
             colQnt.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
             colItem.setCellValueFactory(new PropertyValueFactory<>("item"));
@@ -157,87 +144,82 @@ valor RS,00 historico fechamento  ok
 
             colPeso.setCellValueFactory(new PropertyValueFactory<>("peso"));
             colPeso.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
-    @Override
-    public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
-        return new TableCell<Itens, Float>() {
-            @Override
-            protected void updateItem(Float item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty || item == 0) {
-                    setText(null);
-                } else {
-                    //NumberFormat kilo = NumberFormat.getNumberInstance(localeBR);
-                    //kilo.setMinimumFractionDigits(3);
-                    //kilo.setMaximumFractionDigits(3);
-                    setText(numFormatText(item,3));
-                    setAlignment(Pos.CENTER_RIGHT);
+                @Override
+                public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
+                    return new TableCell<Itens, Float>() {
+                        @Override
+                        protected void updateItem(Float item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty || item == 0) {
+                                setText(null);
+                            } else {
+                                setText(numFormatText(item,3));
+                                setAlignment(Pos.CENTER_RIGHT);
+                            }
+                        }
+                    };
                 }
-            }
-        };
-    }
-});
+            });
 
             colVal.setCellValueFactory(new PropertyValueFactory<>("valorCalculado"));
             colVal.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
-    @Override
-    public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
-        return new TableCell<Itens, Float>() {
-            @Override
-            protected void updateItem(Float item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                } else {
-                    //NumberFormat dinheiro = NumberFormat.getNumberInstance(localeBR);
-                    //dinheiro.setMinimumFractionDigits(2);
-                    //dinheiro.setMaximumFractionDigits(2);
-                    setText(numFormatText(item,2));
-                    setAlignment(Pos.CENTER_RIGHT);
+                @Override
+                public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
+                    return new TableCell<Itens, Float>() {
+                        @Override
+                        protected void updateItem(Float item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                            } else {
+                                setText(numFormatText(item,2));
+                                setAlignment(Pos.CENTER_RIGHT);
+                            }
+                        }
+                    };
                 }
-            }
-        };
-    }
-});
+            });
             
             colDest.setCellValueFactory(new PropertyValueFactory<>("destaque"));
             colDest.setCellFactory(new Callback<TableColumn<Itens, Boolean>, TableCell<Itens, Boolean>>() {
-    @Override
-    public TableCell<Itens, Boolean> call(TableColumn<Itens, Boolean> param) {
-        return new TableCell<Itens, Boolean>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                } else {
-                    setText(item ? "✔" : " ");
-                    if (item) {
-                        // Muda a cor da linha para verde se a palavra for "Sim"
-                        getTableRow().setStyle("-fx-background-color: lightgreen");
-                    }else {
-                        // Limpa o estilo se a palavra for "Não"
-                        getTableRow().setStyle("");
-                    }
+                @Override
+                public TableCell<Itens, Boolean> call(TableColumn<Itens, Boolean> param) {
+                    return new TableCell<Itens, Boolean>() {
+                        @Override
+                        protected void updateItem(Boolean item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                            } else {
+                                setText(item ? "✔" : " ");
+                                if (item) {
+                                    // Muda a cor da linha para verde se a palavra for "Sim"
+                                    getTableRow().setStyle("-fx-background-color: lightgreen");
+                                }else {
+                                    // Limpa o estilo se a palavra for "Não"
+                                    getTableRow().setStyle("");
+                                }
+                            }
+                        }
+                    };
                 }
-            }
-        };
-    }
-});
+            });
 
 
             if(al.size() > 1){
                 for(int i =0; i < al.size();i++){
                     if(al.get(i).isDestaque()){
                         String qnt = String.valueOf(al.get(i).getQuantidade());
+                            if(qnt =="0"){qnt ="";}//exibir qnt 0 como vazio.
                         String peso = String.valueOf(al.get(i).getPeso());
                         String val = String.valueOf(al.get(i).getValorCalculado());
                         listDest.add(al.get(i));
                     }else{
                         String qnt = String.valueOf(al.get(i).getQuantidade());
+                            if(qnt =="0"){qnt ="";}//exibir qnt 0 como vazio.
                         String peso = String.valueOf(al.get(i).getPeso());
                         String val = String.valueOf(al.get(i).getValorCalculado());
                         list.add(al.get(i));
-                        //list.add(al.get(i));
                     }
                 }
             }
@@ -261,7 +243,6 @@ valor RS,00 historico fechamento  ok
         try{
             String m = String.valueOf(selectMes.getSelectionModel().getSelectedIndex() + 1);
             String a = selectAno.getSelectionModel().getSelectedItem();
-            //labelMes.getParent().setUserData(m+"_"+a);
             App.DADOS = m+"_"+a;
 
             initialize();

@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Conexao.Conexao;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 
 public class ItemDao {
@@ -61,7 +59,6 @@ public class ItemDao {
     public ArrayList<String> listaItem() throws SQLException{
         String query = "select item from Item";
         stmt = con.prepareStatement(query);
-       // stmt.setString(1,'%'+ pesquisa+'%');
 
         ResultSet rs = stmt.executeQuery();
 
@@ -69,7 +66,6 @@ public class ItemDao {
 
         while (rs.next()) {
             lista.add(rs.getString("item"));
-            //System.out.println(rs.getString("item"));
         }
 
         return lista;

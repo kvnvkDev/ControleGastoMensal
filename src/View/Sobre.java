@@ -37,9 +37,16 @@ public class Sobre {
 
     private String url = "https://github.com/kvnvkDev/";
 
-    void inicialize(){
-        icoSobre.setGraphic(new ImageView(App.DIRLOGO));
-        link.setGraphic(new ImageView(System.getProperty("user.dir") + "/ico/github.png"));
+    public void initialize(){
+
+        try {
+            icoSobre.setText("");
+            link.setText("");
+            icoSobre.setGraphic(new ImageView(App.DIRLOGO));
+            link.setGraphic(new ImageView(System.getProperty("user.dir") + "/ico/github.png"));
+        } catch (Exception e) {
+            System.out.println("Erro iniciar sobre "+e.getMessage());
+        }
         
     }
     
@@ -74,7 +81,7 @@ public class Sobre {
             
             tidErr.setTitle("Reset");
             tidErr.setHeaderText("Deseja apagar todos os dados do aplicativo?");
-            tidErr.setContentText("Ao clicar em OK os dados serão apagados e o aplicativo reiniciará.\nPara fazer backup dos dados vá para a tela de Exportar/Importar.");
+            tidErr.setContentText("Ao clicar em OK os dados serão apagados e o aplicativo reiniciará. Para fazer backup dos dados vá para a tela de Exportar/Importar.");
             tidErr.initModality(Modality.APPLICATION_MODAL);
                
             Optional<ButtonType> option = tidErr.showAndWait();
@@ -102,5 +109,3 @@ public class Sobre {
         }
 
 }
-
-

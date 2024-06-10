@@ -41,7 +41,7 @@
 
 <VBox prefHeight="350.0" prefWidth="502.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PrimeiroAcesso">
   <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="362.0" prefWidth="502.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="362.0" prefWidth="502.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS">
          <children>
             <Label layoutX="39.0" layoutY="35.0" text="Olá," textFill="GREY">
                <font>

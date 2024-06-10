@@ -28,13 +28,10 @@ public class ControleDao {
 
     private List<EntradaExtra> convertStringToMap(String descExtra){
 
-            //
             if(descExtra != null && descExtra.length()>1){
                 
-                //descExtra = descExtra.substring(1, descExtra.length()-1);           //remove curly brackets
                 String[] v = descExtra.split(",");
                 
-
                 List<EntradaExtra> l = new ArrayList<EntradaExtra>();
                 for(String sv : v){
                     if(sv.length() > 2){
@@ -43,15 +40,6 @@ public class ControleDao {
                     l.add(e);
                     }
                 }
-                /*
-                Map<Float,String> m = new HashMap<Float,String>();
-                for(String sv : v){
-                    String s[] = sv.split("=");
-                    m.put(Float.parseFloat(s[0]), s[1]);
-                }
-                return m;
-
-                */
                 return l;
             }else{
                 return null;
@@ -92,8 +80,7 @@ public class ControleDao {
         Float limite = ctrl.getLimite();
         Float valEnt = ctrl.getValorEntrada();
         String descEnt = ctrl.getDescricaoEntrada();
-        boolean aberto = ctrl.isEmAberto();
-System.out.println("insertmesano" + mesano);
+        boolean aberto = ctrl.EmAberto();
         String query = " insert into Controle(mes_ano,limite,valorEntrada,descricaoEntrada,emAberto) "
         +" values(?,?,?,?,?);";
 
@@ -107,7 +94,6 @@ System.out.println("insertmesano" + mesano);
 
         stmt.execute();
 
-        //con.close();
         return true;
         }catch(Exception e){
             System.out.print("Erro ao criar controle "+ e.getMessage());
@@ -138,21 +124,6 @@ System.out.println("insertmesano" + mesano);
                 descExtra = "";
             }
            
-            /* 
-            descExtra = descExtra.substring(1, descExtra.length()-1);           //remove curly brackets
-            String[] v = descExtra.split(",");
-
-            Map<Float,String> m = new HashMap<Float,String>();
-            for(String sv : v){
-                String s[] = sv.split("=");
-                m.put(Float.parseFloat(s[0]), s[1]);
-            }
-            m.putAll(map);
-            */
-            //List<EntradaExtra> list = new LinkedList<EntradaExtra>();
-
-            //list.(convertStringToMap(descExtra));
-            //list.add(map);
             if(descExtra == "null"){
                 descExtra = "";
             }
@@ -185,24 +156,11 @@ System.out.println("insertmesano" + mesano);
         try {
             abrirConexao();
             String query = "select * from Controle where mes_ano = ?";
-        System.out.println(query);
             stmt = con.prepareStatement(query);
             stmt.setString(1, mes + "_" + ano);
             ResultSet rs = stmt.executeQuery();
 
-           
-
-            //teste
-            /*
-            System.out.println("teste");
-            System.out.println(rs.getFloat("limite"));
-            System.out.println(rs.getRow());
-            //System.out.println(rs.next());
-            System.out.println(rs.getFloat("limite"));
-            System.out.println(rs.getString("mes_ano"));
-            System.out.println(rs.getString("descricaoEntrada"));
-            System.out.println("------------" + rs.getString("valor_descricaoEntradaExtra"));
-*/
+        
             List<EntradaExtra> map = convertStringToMap(rs.getString("valor_descricaoEntradaExtra"));
             
 
@@ -303,7 +261,7 @@ System.out.println("insertmesano" + mesano);
         }
     }
 
-    public boolean alterarEntreda(Float entr, String descricao) { //, String mes, String ano
+    public boolean alterarEntrada(Float entr, String descricao) { //, String mes, String ano
         try{
             abrirConexao();
         String query = "update Controle set valorEntrada=?, descricaoEntrada=? where emAberto = 1 "; //'" + (mes + "_" + ano)+"'";

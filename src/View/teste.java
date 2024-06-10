@@ -1,19 +1,9 @@
 package View;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import Control.LembreteDao;
-import Model.Lembrete;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class teste extends Application{
@@ -59,11 +49,13 @@ public class teste extends Application{
     public void start(Stage arg0) throws Exception {
         
         FXMLLoader fxmll = new FXMLLoader(getClass().getResource("teste.fxml"));
+        System.out.println(fxmll.getLocation());
+        System.out.println(getClass().getResource("teste.fxml"));
         Parent root = fxmll.load();
         Scene tela = new Scene(root);
             
       
-
+arg0.getIcons().add(App.DIRLOGO);
 
         arg0.setTitle("teste");
         arg0.setScene(tela);System.out.println("11111111133333111");

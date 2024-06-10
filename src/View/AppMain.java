@@ -14,11 +14,7 @@ public class AppMain extends Application {
         launch(args);
     }
 
-//***** */
-
  protected static ControleDao CDAO;
-
-        
 
     @Override
     public void start(Stage arg0) throws Exception {
@@ -33,35 +29,28 @@ public class AppMain extends Application {
         }
 
         if(CDAO.verificaAcesso()){
-            FXMLLoader fxmll = new FXMLLoader(getClass().getResource("AppLayout.fxml"));
+            FXMLLoader fxmll = new FXMLLoader(this.getClass().getResource("AppLayout.fxml"));
             Parent root = fxmll.load();
             Scene tela = new Scene(root); 
-    
             arg0.setTitle("Controle de Gasto Mensal");
             arg0.setScene(tela);
 
             arg0.getIcons().add(App.DIRLOGO);
-
             arg0.show();
 
         }else{
-            FXMLLoader fxmll = new FXMLLoader(getClass().getResource("PrimeiroAcesso.fxml"));
+            FXMLLoader fxmll = new FXMLLoader(this.getClass().getResource("PrimeiroAcesso.fxml"));
+            System.out.println(this.getClass().getResource("AppLayout.fxml"));
             Parent root = fxmll.load();
             Scene tela = new Scene(root); 
-      
             arg0.setTitle("Controle de Gasto Mensal");
             arg0.setScene(tela);
 
         
             arg0.getIcons().add(App.DIRLOGO);
-
-            arg0.showAndWait();
-            start(arg0);
+            arg0.show();
+            //start(arg0);
         }
-        
-        
-
-        
         //throw new UnsupportedOperationException("Unimplemented method 'start'");
     }
 

@@ -40,15 +40,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="235.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Sobre">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="235.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Sobre">
   <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="234.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label fx:id="icoSobre" layoutX="14.0" layoutY="14.0" />
-            <Label layoutX="14.0" layoutY="79.0" text="Desenvolvido por kvnvkdev" />
-            <Hyperlink fx:id="link" layoutX="164.0" layoutY="76.0" onAction="#openBrowser" />
+            <Label fx:id="icoSobre" layoutX="14.0" layoutY="9.0" text="Logo" />
+            <Label layoutX="14.0" layoutY="108.0" text="Desenvolvido por kvnvkdev" />
+            <Hyperlink fx:id="link" alignment="CENTER" layoutX="160.0" layoutY="105.0" onAction="#openBrowser" text="link" />
             <Button fx:id="reset" layoutX="14.0" layoutY="195.0" mnemonicParsing="false" onAction="#resetApp" text="Resetar aplicação" />
-            <Label layoutX="20.0" layoutY="14.0" text="Controle de gasto mensal">
+            <Label layoutX="105.0" layoutY="18.0" text="Controle de gasto mensal">
                <font>
                   <Font size="18.0" />
                </font>
@@ -56,12 +56,12 @@
                   <Insets left="12.0" />
                </padding>
             </Label>
-            <Label layoutX="222.0" layoutY="41.0" text="1.0 - 2024">
+            <Label layoutX="277.0" layoutY="37.0" text="1.0 - 2024">
                <font>
                   <Font size="10.0" />
                </font>
             </Label>
-            <Label layoutX="14.0" layoutY="100.0" prefHeight="63.0" prefWidth="372.0" text="Aplicativo desktop simples para controle de gasto mensal desenvolvido em Java 17 com bibliotecas JavaFX, ControlsFX e banco de dados SQLite." wrapText="true" />
+            <Label layoutX="14.0" layoutY="127.0" prefHeight="63.0" prefWidth="372.0" text="Aplicativo desktop simples para controle pessoal de gasto mensal de itens gerais desenvolvido em Java 17." wrapText="true" />
          </children>
     </AnchorPane>
   </children>
