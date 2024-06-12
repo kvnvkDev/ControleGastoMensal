@@ -30,11 +30,11 @@ public class ItensDao {
         abrirConexao();
             String mesano = it.getMes() + "_" + it.getAno();
             boolean emPeso = it.isEmPeso();
-            float peso = it.getPeso();
+            double peso = it.getPeso();
             String item = it.getItem();
             String categoria = it.getCategoria();
-            float valCalc = it.getValorCalculado();
-            float valUni = it.getValorUnitário();
+            double valCalc = it.getValorCalculado();
+            double valUni = it.getValorUnitário();
             boolean dest = it.isDestaque();
             int qnt = it.getQuantidade();
 
@@ -45,11 +45,11 @@ public class ItensDao {
         //stmt.setInt(1,null);
         stmt.setString(1,mesano);
         stmt.setBoolean(2,emPeso);
-        stmt.setFloat(3,peso);
+        stmt.setDouble(3,peso);
         stmt.setString(4,item);
         stmt.setString(5,categoria);
-        stmt.setFloat(6,valCalc);
-        stmt.setFloat(7,valUni);
+        stmt.setDouble(6,valCalc);
+        stmt.setDouble(7,valUni);
         stmt.setBoolean(8,dest);
         stmt.setInt(9,qnt);
 
@@ -87,7 +87,7 @@ public class ItensDao {
             
             while (rs.next()) {
 
-                Itens it = new Itens(s[0],s[1],rs.getInt("qnt"),rs.getBoolean("emPeso"),rs.getFloat("peso"),rs.getString("Item"),rs.getString("categoria"),rs.getFloat("valorCalculado"),rs.getFloat("valorUnitario"),rs.getBoolean("emDestaque"));
+                Itens it = new Itens(s[0],s[1],rs.getInt("qnt"),rs.getBoolean("emPeso"),rs.getDouble("peso"),rs.getString("Item"),rs.getString("categoria"),rs.getDouble("valorCalculado"),rs.getDouble("valorUnitario"),rs.getBoolean("emDestaque"));
                 list.add(it);
             }
 

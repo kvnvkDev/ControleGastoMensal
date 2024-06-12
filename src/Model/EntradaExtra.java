@@ -1,19 +1,20 @@
 package Model;
 
+
 public class EntradaExtra{
-    private float valorEntrada;
+    private double valorEntrada;
     private String descricaoEntrada;
 
-    public EntradaExtra(String desc, float val){
+    public EntradaExtra(String desc, double val){
         this.descricaoEntrada = desc;
         this.valorEntrada = val;
     }
 
-    public float getValorEntrada() {
+    public double getValorEntrada() {
         return valorEntrada;
     }
 
-    public void setValorEntrada(float valorEntrada) {
+    public void setValorEntrada(double valorEntrada) {
         this.valorEntrada = valorEntrada;
     }
 

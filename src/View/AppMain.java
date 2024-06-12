@@ -40,7 +40,7 @@ public class AppMain extends Application {
 
         }else{
             FXMLLoader fxmll = new FXMLLoader(this.getClass().getResource("PrimeiroAcesso.fxml"));
-            System.out.println(this.getClass().getResource("AppLayout.fxml"));
+           
             Parent root = fxmll.load();
             Scene tela = new Scene(root); 
             arg0.setTitle("Controle de Gasto Mensal");

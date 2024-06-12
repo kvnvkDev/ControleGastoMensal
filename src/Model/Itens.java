@@ -6,16 +6,16 @@ public class Itens {
     private String ano;
     private int quantidade;
     private boolean emPeso;
-    private float peso;
+    private double peso;
     private String item;
     private String categoria;
-    private float valorCalculado;
-    private float valorUnitário;
+    private double valorCalculado;
+    private double valorUnitário;
     private boolean destaque;
 
     
-    public Itens(String mes, String ano, int quantidade, boolean emPeso, float peso, String item, String categoria,
-            float valorCalculado, float valorUnitário, boolean destaque) {
+    public Itens(String mes, String ano, int quantidade, boolean emPeso, double peso, String item, String categoria,
+            double valorCalculado, double valorUnitário, boolean destaque) {
         this.mes = mes;
         this.ano = ano;
         this.quantidade = quantidade;
@@ -29,7 +29,7 @@ public class Itens {
     }
 
     public Itens(String mes, String ano, int quantidade, String item, String categoria,
-             float valorUnitário, boolean destaque) {
+             double valorUnitário, boolean destaque) {
         this.mes = mes;
         this.ano = ano;
         this.quantidade = quantidade;
@@ -39,8 +39,8 @@ public class Itens {
         this.destaque = destaque;
     }
 
-    public Itens(String mes, String ano, boolean emPeso, float peso, String item, String categoria,
-            float valorCalculado, boolean destaque) {
+    public Itens(String mes, String ano, boolean emPeso, double peso, String item, String categoria,
+            double valorCalculado, boolean destaque) {
         this.mes = mes;
         this.ano = ano;
         this.emPeso = emPeso;
@@ -93,12 +93,12 @@ public class Itens {
     }
 
 
-    public float getPeso() {
+    public double getPeso() {
         return peso;
     }
 
 
-    public void setPeso(float peso) {
+    public void setPeso(double peso) {
         this.peso = peso;
     }
 
@@ -123,22 +123,22 @@ public class Itens {
     }
 
 
-    public float getValorCalculado() {
+    public double getValorCalculado() {
         return valorCalculado;
     }
 
 
-    public void setValorCalculado(float valorCalculado) {
+    public void setValorCalculado(double valorCalculado) {
         this.valorCalculado = valorCalculado;
     }
 
 
-    public float getValorUnitário() {
+    public double getValorUnitário() {
         return valorUnitário;
     }
 
 
-    public void setValorUnitário(float valorUnitário) {
+    public void setValorUnitário(double valorUnitário) {
         this.valorUnitário = valorUnitário;
     }
 

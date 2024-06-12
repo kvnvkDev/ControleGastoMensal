@@ -42,7 +42,7 @@ public class LembreteDao {
         stmt.setString(1, m+"_"+a);
         stmt.setShort(2, id);
 
-        System.out.println(query);
+        //System.out.println(query);
         stmt.execute();
     }
 

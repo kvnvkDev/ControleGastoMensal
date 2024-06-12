@@ -56,7 +56,7 @@
                   <Insets left="12.0" />
                </padding>
             </Label>
-            <Label layoutX="277.0" layoutY="37.0" text="1.0 - 2024">
+            <Label fx:id="labelVersion" layoutX="277.0" layoutY="37.0" text="1.0 - 2024">
                <font>
                   <Font size="10.0" />
                </font>

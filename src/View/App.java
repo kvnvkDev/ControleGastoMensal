@@ -3,11 +3,9 @@ package View;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import org.controlsfx.control.textfield.TextFields;
@@ -21,8 +19,8 @@ import Model.Controle;
 import Model.EntradaExtra;
 import Model.Itens;
 import Model.Lembrete;
+import Util.util;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -131,13 +129,13 @@ public class App {
     protected Alert alertConfirm;
     protected Alert alertInfo;
 
-
+    //sugestoes textfield - item e categoria
     private List<String> suggestions = new ArrayList<>();
     
     private ItemDao iDao;
     private CategoriaDao catDao;
     private ItensDao itensDao;
-    List<EntradaExtra> l = new ArrayList<EntradaExtra>();
+    
 
     private String dir = System.getProperty("user.dir");
     protected static Image DIRLOGO = new Image(System.getProperty("user.dir")+"/ico/icone.png");
@@ -153,55 +151,10 @@ public class App {
         protected static String DADOS;
         TextFormatter<String> textFormatter;
 
-        public static String mesNome(String mesNum){
-            switch (mesNum) {
-                case "1":
-                    return "Janeiro";
-                case "2":
-                    return "Fevereiro";
-                case "3":
-                    return "Março";    
-                case "4":
-                    return "Abril";
-                case "5":
-                    return "Maio";
-                case "6":
-                    return "Junho";
-                case "7":
-                    return "Julho";
-                case "8":
-                    return "Agosto";
-                case "9":
-                    return "Setembro";
-                case "10":
-                    return "Outubro";
-                case "11":
-                    return "Novembro";
-                case "12":
-                    return "Dezembro";
-                default:
-                    return "mês inválido";
-            }
-        }
 
 
-
-public static void mascaraNumero(TextField textField){
-        
-        textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            newValue = newValue.replaceAll(",",".");
-            if(newValue.length()>0){
-                try{
-                    Double.parseDouble(newValue);
-                    textField.setText(newValue.replaceAll(",","."));
-                }catch(Exception e){
-                    textField.setText(oldValue);
-                }
-            }
-        });
-        
-    } 
-
+//interface
+//efeito ao clicar em botão
    public void press(Button b, String pathClick, String path){
         b.setOnMousePressed(event -> {
             b.setGraphic(new ImageView(dir+pathClick));
@@ -211,7 +164,6 @@ public static void mascaraNumero(TextField textField){
             b.setGraphic(new ImageView(dir+path));
         });
    }
-
 
 private Runnable t1 = new Runnable() {
         public void run() {
@@ -287,15 +239,7 @@ private Runnable t1 = new Runnable() {
         
     }
 
-    private Locale localeBR = new Locale( "pt", "BR" ); 
-
-    private String numFormatText(float val,int decimals){
-         NumberFormat num = NumberFormat.getNumberInstance(localeBR);
-         num.setMinimumFractionDigits(decimals);
-         num.setMaximumFractionDigits(decimals);
-
-         return num.format(val);
-    }
+    
 
 
         public void initialize(){
@@ -311,7 +255,7 @@ private Runnable t1 = new Runnable() {
                 String[] mesAberto = cDao.getMesEmAberto();
                 MES = mesAberto[0];
                 ANO = mesAberto[1];
-                mes = mesNome(MES);
+                mes = util.mesNome(MES);
 
                 //compara mes
                 if (!mesAberto[0].equals(String.valueOf(DATENOW.getMonthValue()))){
@@ -323,6 +267,7 @@ private Runnable t1 = new Runnable() {
                     tidErr.initModality(Modality.APPLICATION_MODAL);
                     tidErr.showAndWait();
                 }
+                System.out.println("# mes" + mes);
 
                 //alerta lembrete
                 //verifica lembrete
@@ -340,9 +285,10 @@ private Runnable t1 = new Runnable() {
                 }
 
                 controle = cDao.getControle(mesAberto[0],mesAberto[1]);
+                System.out.println("# controle");
 
-                labelLimite.setText("Limite: R$ " + numFormatText(controle.getLimite(),2));
-                labelGastoMes.setText("Gasto acumulado: R$ " +numFormatText( controle.getTotalGasto(),2));
+                labelLimite.setText("Limite: R$ " + util.numFormatText(controle.getLimite(),2));
+                labelGastoMes.setText("Gasto acumulado: R$ " +util.numFormatText( controle.getTotalGasto(),2));
                 labelMesAberto.setText(mes + " - " + ANO + "   Aberto");
 
                 //verifica se valor está proximo do limite
@@ -350,22 +296,18 @@ private Runnable t1 = new Runnable() {
                     labelGastoMes.setStyle("-fx-border-color: red; -fx-border-width: 1px; -fx-text-fill: orange;");
                 }
 
-                float saldo = controle.getValorEntrada();
+                double saldo = controle.getValorEntrada();
                 List<EntradaExtra> m = controle.getEntradaExtra();
                 
                 if (m == null || m.isEmpty()) {
-                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
+                    labelSaldoMes.setText("Saldo entrada: R$ " + util.numFormatText(saldo, 2));
                 }else{
-                    System.out.println("------");
                     for (int i=0; i < m.size();i++){
                         saldo = saldo + m.get(i).getValorEntrada();
-                        System.out.println(saldo);
-                        System.out.println(m.get(i).getDescricaoEntrada()+m.get(i).getValorEntrada());
                     }
-                    System.out.println(saldo);
-                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
+                    labelSaldoMes.setText("Saldo entrada: R$ " + util.numFormatText(saldo, 2));
                 }
-
+                
                 SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999);
                 valueFactory.setValue(1);
                 spinQnt.setValueFactory(valueFactory);
@@ -373,11 +315,11 @@ private Runnable t1 = new Runnable() {
                 txtPeso.setDisable(true);
                 txtValCalc.setDisable(true);
 
-               mascaraNumero(txtValCalc);
-               mascaraNumero(txtValEntrada);
-               mascaraNumero(txtValUnit);
-               mascaraNumero(txtPeso);
-            
+               util.mascaraNumero(txtValCalc,2);
+               util.mascaraNumero(txtValEntrada,2);
+               util.mascaraNumero(txtValUnit,2);
+               util.mascaraNumero(txtPeso,3);
+            System.out.println("# pronto");
             }catch(SQLException | IOException e){
                 Alert tidErr = new Alert(Alert.AlertType.ERROR);
                 ((Stage)tidErr.getDialogPane().getScene().getWindow()).getIcons().add(App.DIRLOGO);
@@ -404,16 +346,17 @@ private Runnable t1 = new Runnable() {
 
         try {
             if(result.isPresent()){
-                float valLimite = Float.parseFloat(result.get());
+                double valLimite = Double.parseDouble(result.get());
                 System.out.println("limite definido:"+valLimite);
-                labelLimite.setText("Limite: R$ "+ numFormatText(valLimite, 2));
+                labelLimite.setText("Limite: R$ "+ util.numFormatText(valLimite, 2));
                 cDao.alterarLimite(valLimite);
             }
         } catch (NumberFormatException e ) {
             //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Valor não é válido!");
-            alertError.setHeaderText("Insira um valor numérico Ex: 2000.00");
+            alertError.setHeaderText("Insira um valor numérico Ex: 2000.00.\n" + //
+                    "Não use vírgulas para separar casas decimais.");
             alertError.showAndWait();
         }catch(Exception e){
             //Alert tidErr = new Alert(Alert.AlertType.ERROR);
@@ -505,7 +448,7 @@ private Runnable t1 = new Runnable() {
     @FXML
     void definirEntrada(ActionEvent event) {
         try {
-            float val = controle.getValorEntrada();
+            double val = controle.getValorEntrada();
             String desc = controle.getDescricaoEntrada();
 
             TextInputDialog td = new TextInputDialog(); 
@@ -519,11 +462,11 @@ private Runnable t1 = new Runnable() {
 
             Optional<String> option = td.showAndWait();
             if(option.isPresent()){
-                float valEnt = Float.parseFloat(tfv.getText());
+                double valEnt = Double.parseDouble(tfv.getText());
                 String valDesc = tfd.getText();
-                cDao.alterarEntrada(valEnt, valDesc);
+                cDao.alterarEntrada(util.trucarDouble(valEnt), valDesc);
 
-                controle.setValorEntrada(valEnt);
+                controle.setValorEntrada(util.trucarDouble(valEnt));
                 controle.setDescricaoEntrada(valDesc);
                 valTotalEntrada();
 
@@ -532,7 +475,7 @@ private Runnable t1 = new Runnable() {
             //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Valor não é válido!");
-            alertError.setHeaderText("Insira um valor numérico Ex: 2000.00");
+            alertError.setHeaderText("Insira um valor numérico Ex: 2000.00.\nNão use vírgulas para separar casas decimais.");
             alertError.showAndWait();
         }catch(Exception e){
             //Alert tidErr = new Alert(Alert.AlertType.ERROR);
@@ -562,19 +505,18 @@ private Runnable t1 = new Runnable() {
         txtValUnit.setText("");
     }
 
-    private boolean validaString(String s){
-        if(s.contains(",")||s.contains("=")){
-            return false;
-        }else{
-            return true;
-        }
-    }
+    
     @FXML
     void inserirEntrada(ActionEvent event) {
-        if(txtDescricaoEntrada.getText().length() > 1 && validaString(txtDescricaoEntrada.getText())){
+        if(txtDescricaoEntrada.getText().length() > 1 && util.validaStringEntrada(txtDescricaoEntrada.getText())){
         try {
+            List<EntradaExtra> l = new ArrayList<EntradaExtra>();
+            l = controle.getEntradaExtra();
+            if(l == null){
+                l = new ArrayList<EntradaExtra>();
+            }
             String descrição = txtDescricaoEntrada.getText();
-            float valor = Float.parseFloat(txtValEntrada.getText());
+            double valor = Double.parseDouble(txtValEntrada.getText());
 
             EntradaExtra ee = new EntradaExtra(descrição, valor);
             boolean ok = cDao.inserirEntradaExtra(ee, MES + "_" + ANO);
@@ -584,7 +526,6 @@ private Runnable t1 = new Runnable() {
             valTotalEntrada();
 
             if(ok){
-                //Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alertInfo.setTitle("Confirmação");
                 alertInfo.setHeaderText("Entrada inserida com sucesso.");
                 alertInfo.show();
@@ -598,13 +539,11 @@ private Runnable t1 = new Runnable() {
             
             
         } catch (NumberFormatException e ) {
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Valor não é válido!");
             alertError.setHeaderText("No campo de valor insira um valor numérico Ex: 2000.00");
             alertError.showAndWait();
         }catch(Exception e){
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Erro ao adicionar entrada extra");
             alertError.setHeaderText(e.getMessage());
@@ -612,7 +551,6 @@ private Runnable t1 = new Runnable() {
         }
 
         }else{
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             alertError.setTitle("Valor não é válido!");
             alertError.setHeaderText("É necessário preencher os campos vazios.");
             alertError.showAndWait();
@@ -624,42 +562,40 @@ private Runnable t1 = new Runnable() {
         if(txtCategoria.getText().length() > 1 && txtItem.getText().length() > 1){
         try {
             
-            float peso;
-            float valCalc;
-            float valUnit;
+            double peso;
+            double valCalc;
+            double valUnit;
             int qnt;
             //Itens itens;
             //ItensDao iDao;
             boolean ok;
             if(checkPeso.isSelected()){
-                peso = Float.parseFloat(txtPeso.getText());
-                valCalc =Float.parseFloat(txtValCalc.getText());
+                peso = Double.parseDouble(txtPeso.getText());
+                valCalc =Double.parseDouble(txtValCalc.getText());
                 Itens itens = new Itens(MES, ANO, true, peso, txtItem.getText(), txtCategoria.getText(), valCalc, checkDestaque.isSelected());
                 valUnit = valCalc / peso;
+                valUnit = util.trucarDouble(valUnit);
                 itens.setValorUnitário(valUnit);
 
-                float totalGasto = controle.getTotalGasto();//System.out.println(totalGasto);// cDao.totalGastoMes(MES+"_"+ANO);System.out.println(totalGasto);
+                double totalGasto = controle.getTotalGasto();
                 totalGasto = totalGasto + itens.getValorCalculado();
 
                 cDao.somaTotalGasto(totalGasto, MES+"_"+ANO);
-                //iDao = new ItensDao();
+                
                 ok = itensDao.adicionarItens(itens);
                 controle.setTotalGasto(totalGasto);
 
-                //ItemDao itemDao = new ItemDao();
-                //CategoriaDao catDao = new CategoriaDao();
                 iDao.adicionarItem(txtItem.getText());
                 catDao.adicionarCategoria(txtCategoria.getText());
                 refreshSuggestions();
 
                 if(ok){
-                    //Alert tid = new Alert(Alert.AlertType.INFORMATION);
                     alertInfo.setTitle("Confirmação");
                     alertInfo.setHeaderText("Saida inserida com sucesso.");
                     alertInfo.show();
 
                     limparDadosSaida(event);
-                    labelGastoMes.setText("Gasto acumulado: R$ " + numFormatText(controle.getTotalGasto(),2));
+                    labelGastoMes.setText("Gasto acumulado: R$ " + util.numFormatText(controle.getTotalGasto(),2));
                 }else{
                     alertError.setTitle("Erro!");
                     alertError.setHeaderText("Verifique as permissões de gravação.");
@@ -667,17 +603,17 @@ private Runnable t1 = new Runnable() {
                 }
                 
             }else if(!checkPeso.isSelected()){
-                valUnit = Float.parseFloat(txtValUnit.getText());
+                valUnit = Double.parseDouble(txtValUnit.getText());
                 qnt = spinQnt.getValue();
                 Itens itens = new Itens(MES, ANO, qnt, txtItem.getText(), txtCategoria.getText(), valUnit, checkDestaque.isSelected());
                 valCalc = valUnit * qnt;
                 itens.setValorCalculado(valCalc);
 
-                float totalGasto = controle.getTotalGasto();//System.out.println(totalGasto+"?");//cDao.totalGastoMes(MES+"_"+ANO);System.out.println(totalGasto+"?");
+                double totalGasto = controle.getTotalGasto();
                 totalGasto = totalGasto + itens.getValorCalculado();
 
                 cDao.somaTotalGasto(totalGasto, MES+"_"+ANO);
-                //iDao = new ItensDao();
+                
                 ok = itensDao.adicionarItens(itens);
                 controle.setTotalGasto(totalGasto);
 
@@ -686,13 +622,12 @@ private Runnable t1 = new Runnable() {
                 refreshSuggestions();
 
                 if(ok){
-                    //Alert tid = new Alert(Alert.AlertType.INFORMATION);
                     alertInfo.setTitle("Confirmação");
                     alertInfo.setHeaderText("Saida inserida com sucesso.");
                     alertInfo.show();
 
                     limparDadosSaida(event);
-                    labelGastoMes.setText("Gasto acumulado: R$ " + numFormatText(controle.getTotalGasto(),2));
+                    labelGastoMes.setText("Gasto acumulado: R$ " + util.numFormatText(controle.getTotalGasto(),2));
                 }else{
                     alertError.setTitle("Erro!");
                     alertError.setHeaderText("Verifique as permissões de gravação.");
@@ -702,13 +637,11 @@ private Runnable t1 = new Runnable() {
             }
            
         } catch (NumberFormatException e ) {
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Valor não é válido!");
             alertError.setHeaderText("No campo de valor e peso insira um valor numérico. Ex: 2000.00");
             alertError.showAndWait();
         }catch(Exception e){
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Erro ao adicionar saida");
             alertError.setHeaderText(e.getMessage());
@@ -716,7 +649,6 @@ private Runnable t1 = new Runnable() {
         }
 
     }else{
-        //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             alertError.setTitle("Valor não é válido!");
             alertError.setHeaderText("É necessário preencher os campos vazios.");
             alertError.showAndWait();
@@ -740,17 +672,18 @@ private Runnable t1 = new Runnable() {
     }
 
     public void valTotalEntrada(){
-        float saldo = controle.getValorEntrada();
+        double saldo = controle.getValorEntrada();
                 List<EntradaExtra> m = controle.getEntradaExtra();
 
                 if (m == null || m.isEmpty()) {
-                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
+                    labelSaldoMes.setText("Saldo entrada: R$ " + util.numFormatText(saldo, 2));
                 }else{
                     for (int i=0; i < m.size();i++){
-                        saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo);
+                        saldo = saldo + m.get(i).getValorEntrada();
                     }
-                    labelSaldoMes.setText("Saldo entrada: R$ " + numFormatText(saldo, 2));
+                    labelSaldoMes.setText("Saldo entrada: R$ " + util.numFormatText(saldo, 2));
                 }
+                System.out.println("# saldo entrada " +saldo);
     }
 
     @FXML
@@ -769,7 +702,6 @@ private Runnable t1 = new Runnable() {
 
             stage.showAndWait();
         }catch(IOException e){
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             System.out.println(e.getMessage());
             alertError.setTitle("Erro de tela Histórico");
             alertError.setHeaderText(e.getMessage());
@@ -793,7 +725,6 @@ private Runnable t1 = new Runnable() {
 
             stage.show();
         } catch (Exception e) {
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             alertError.setTitle("Erro de tela Exporar/Importar");
             alertError.setHeaderText(e.getMessage());
             alertError.showAndWait();
@@ -816,7 +747,6 @@ private Runnable t1 = new Runnable() {
 
             stage.show();
         } catch (Exception e) {
-            //Alert tidErr = new Alert(Alert.AlertType.ERROR);
             alertError.setTitle("Erro de tela Sobre");
             alertError.setHeaderText(e.getMessage());
             alertError.showAndWait();

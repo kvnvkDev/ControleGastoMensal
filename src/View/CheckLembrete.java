@@ -46,7 +46,7 @@ public class CheckLembrete {
             lDao = new LembreteDao();
             List<Lembrete> lista = lDao.buscarLembrete(App.MES+"_"+App.ANO);//(App.MES + "_" + App.ANO);
             if(lista.isEmpty()||lista.size()<=0){
-                System.out.println("vazio");
+                System.out.println("# lebrete vazio");
             }
 
             for(int i=0; i<lista.size(); i++){
@@ -88,8 +88,8 @@ public class CheckLembrete {
 
     public void adiarLemb(){
         if(listaLemb.getSelectionModel().getSelectedIndex() >= 0){
-            String s = listaLemb.getSelectionModel().getSelectedItem();System.out.println(s);
-            int ix = listaLemb.getSelectionModel().getSelectedIndex();System.out.println(ix);
+            String s = listaLemb.getSelectionModel().getSelectedItem();//System.out.println(s);
+            int ix = listaLemb.getSelectionModel().getSelectedIndex();//System.out.println(ix);
             String[] id = s.split(".  ");
 
             Alert tidErr = new Alert(Alert.AlertType.CONFIRMATION);

@@ -1,14 +1,13 @@
 package View;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import Control.ItensDao;
 import Model.Controle;
 import Model.EntradaExtra;
 import Model.Itens;
+import Util.util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -67,13 +66,13 @@ public class Historico {
     private TableColumn<Itens, String> colItem;
 
     @FXML
-    private TableColumn<Itens, Float> colPeso;
+    private TableColumn<Itens, Double> colPeso;
 
     @FXML
     private TableColumn<Itens, String> colQnt;
 
     @FXML
-    private TableColumn<Itens, Float> colVal;
+    private TableColumn<Itens, Double> colVal;
 
 
     
@@ -84,15 +83,6 @@ public class Historico {
     private Controle controle;
     private ItensDao iDao;
 
-    private Locale localeBR = new Locale( "pt", "BR" ); 
-    private String numFormatText(float val,int decimals){
-         NumberFormat num = NumberFormat.getNumberInstance(localeBR);
-         num.setMinimumFractionDigits(decimals);
-         num.setMaximumFractionDigits(decimals);
-         
-
-         return num.format(val);
-    }
 
     public void initialize(){
 
@@ -104,34 +94,35 @@ public class Historico {
 
             String par = App.DADOS; 
             String mesAno[] = par.split("_");
-            String mes = App.mesNome(mesAno[0]);
+            String mes = util.mesNome(mesAno[0]);
             labelMes.setText(mes + " - " + mesAno[1]);
 
 
             controle = App.cDao.getControle(mesAno[0], mesAno[1]);
 
-            labelLimite.setText("Limite: R$ "+numFormatText(controle.getLimite(),2));
+            labelLimite.setText("Limite: R$ "+util.numFormatText(controle.getLimite(),2));
 
-            labelSaldo.setText("Saldo Total: R$ "+numFormatText(controle.getValorEntrada(),2));
+            labelSaldo.setText("Saldo Total: R$ "+util.numFormatText(controle.getValorEntrada(),2));
             labelSaldoDescricao.setText("Descrição: "+controle.getDescricaoEntrada());
 
-            float saldo = 0;
+            double saldo = 0;
             String desc = "";
             List<EntradaExtra> m = controle.getEntradaExtra();
             if (m == null || m.isEmpty()) {
                 labelSaldoExtra.setText("Saldo extra: R$ ");
                 labelDescricaoExtra.setText("Descrição: ");
-            }else{System.out.println("map"+m);
+            }else{
                 for (int i=0; i < m.size();i++){
-                    saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo+m.get(i).getValorEntrada());
-                    desc = desc + m.get(i).getDescricaoEntrada() +   ": "+ numFormatText(m.get(i).getValorEntrada(),2) +"\n";
+                    saldo = saldo + m.get(i).getValorEntrada();
+                    saldo = util.trucarDouble(saldo);
+                    desc = desc + m.get(i).getDescricaoEntrada() +   ": "+ util.numFormatText(m.get(i).getValorEntrada(),2) +"\n";
                 }
-                labelSaldoExtra.setText("Saldo extra: R$ " + numFormatText(saldo, 2));
+                labelSaldoExtra.setText("Saldo extra: R$ " + util.numFormatText(saldo, 2));
                 labelDescricaoExtra.setText("Descrição: "+ desc);
-                labelSaldo.setText("Saldo Total: R$ "+numFormatText((controle.getValorEntrada() + saldo),2));
+                labelSaldo.setText("Saldo Total: R$ "+util.numFormatText((controle.getValorEntrada() + saldo),2));
             }
         
-            labelTotal.setText("Total Gasto: R$ "+numFormatText(controle.getTotalGasto(),2));
+            labelTotal.setText("Total Gasto: R$ "+util.numFormatText(controle.getTotalGasto(),2));
 
             iDao = new ItensDao();
             ArrayList<Itens> al = iDao.listaItens(mesAno[0]+"_"+mesAno[1]);
@@ -143,17 +134,17 @@ public class Historico {
             colCat.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
             colPeso.setCellValueFactory(new PropertyValueFactory<>("peso"));
-            colPeso.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
+            colPeso.setCellFactory(new Callback<TableColumn<Itens, Double>, TableCell<Itens, Double>>() {
                 @Override
-                public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
-                    return new TableCell<Itens, Float>() {
+                public TableCell<Itens, Double> call(TableColumn<Itens, Double> param) {
+                    return new TableCell<Itens, Double>() {
                         @Override
-                        protected void updateItem(Float item, boolean empty) {
+                        protected void updateItem(Double item, boolean empty) {
                             super.updateItem(item, empty);
                             if (item == null || empty || item == 0) {
                                 setText(null);
                             } else {
-                                setText(numFormatText(item,3));
+                                setText(util.numFormatText(item,3));
                                 setAlignment(Pos.CENTER_RIGHT);
                             }
                         }
@@ -162,17 +153,17 @@ public class Historico {
             });
 
             colVal.setCellValueFactory(new PropertyValueFactory<>("valorCalculado"));
-            colVal.setCellFactory(new Callback<TableColumn<Itens, Float>, TableCell<Itens, Float>>() {
+            colVal.setCellFactory(new Callback<TableColumn<Itens, Double>, TableCell<Itens, Double>>() {
                 @Override
-                public TableCell<Itens, Float> call(TableColumn<Itens, Float> param) {
-                    return new TableCell<Itens, Float>() {
+                public TableCell<Itens, Double> call(TableColumn<Itens, Double> param) {
+                    return new TableCell<Itens, Double>() {
                         @Override
-                        protected void updateItem(Float item, boolean empty) {
+                        protected void updateItem(Double item, boolean empty) {
                             super.updateItem(item, empty);
                             if (item == null || empty) {
                                 setText(null);
                             } else {
-                                setText(numFormatText(item,2));
+                                setText(util.numFormatText(item,2));
                                 setAlignment(Pos.CENTER_RIGHT);
                             }
                         }
@@ -206,7 +197,7 @@ public class Historico {
             });
 
 
-            if(al.size() > 1){
+            if(al.size() > 0){
                 for(int i =0; i < al.size();i++){
                     if(al.get(i).isDestaque()){
                         String qnt = String.valueOf(al.get(i).getQuantidade());

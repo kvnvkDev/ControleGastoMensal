@@ -8,17 +8,17 @@ public class Controle {
     
     private String mes;
     private String ano;
-    private float limite;
-    private float valorEntrada;
+    private double limite;
+    private double valorEntrada;
     private String descricaoEntrada;
     private List<EntradaExtra> entradaExtra;
-    private float totalGasto;
-    private float diferenca;
+    private double totalGasto;
+    private double diferenca;
     private boolean emAberto;
 
 
-    public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada,
-            List<EntradaExtra> entradaExtra, float totalGasto, float diferenca, boolean emAberto) {
+    public Controle(String mes, String ano, double limite, double valorEntrada, String descricaoEntrada,
+            List<EntradaExtra> entradaExtra, double totalGasto, double diferenca, boolean emAberto) {
         this.mes = mes;
         this.ano = ano;
         this.limite = limite;
@@ -30,8 +30,8 @@ public class Controle {
         this.emAberto = emAberto;
     }
 
-    public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada,
-            List<EntradaExtra> entradaExtra, float totalGasto, boolean emAberto) {
+    public Controle(String mes, String ano, double limite, double valorEntrada, String descricaoEntrada,
+            List<EntradaExtra> entradaExtra, double totalGasto, boolean emAberto) {
         this.mes = mes;
         this.ano = ano;
         this.limite = limite;
@@ -42,7 +42,7 @@ public class Controle {
         this.emAberto = emAberto;
     }
     
-    public Controle(String mes, String ano, float limite, float valorEntrada, String descricaoEntrada, boolean emAberto) {
+    public Controle(String mes, String ano, double limite, double valorEntrada, String descricaoEntrada, boolean emAberto) {
         this.mes = mes;
         this.ano = ano;
         this.limite = limite;
@@ -65,16 +65,16 @@ public class Controle {
     public void setAno(String ano) {
         this.ano = ano;
     }
-    public float getLimite() {
+    public double getLimite() {
         return limite;
     }
-    public void setLimite(float limite) {
+    public void setLimite(double limite) {
         this.limite = limite;
     }
-    public float getValorEntrada() {
+    public double getValorEntrada() {
         return valorEntrada;
     }
-    public void setValorEntrada(float valorEntrada) {
+    public void setValorEntrada(double valorEntrada) {
         this.valorEntrada = valorEntrada;
     }
     public String getDescricaoEntrada() {
@@ -89,16 +89,16 @@ public class Controle {
     public void setEntradaExtra(List<EntradaExtra> entradaExtra) {
         this.entradaExtra = entradaExtra;
     }
-    public float getTotalGasto() {
+    public double getTotalGasto() {
         return totalGasto;
     }
-    public void setTotalGasto(float totalGasto) {
+    public void setTotalGasto(double totalGasto) {
         this.totalGasto = totalGasto;
     }
-    public float getDiferenca() {
+    public double getDiferenca() {
         return diferenca;
     }
-    public void setDiferenca(float diferenca) {
+    public void setDiferenca(double diferenca) {
         this.diferenca = diferenca;
     }
     public boolean EmAberto() {

@@ -26,7 +26,7 @@ public class ControleDao {
         if(con.isClosed()){con = Conexao.connect();}
     }
 
-    private List<EntradaExtra> convertStringToMap(String descExtra){
+    private List<EntradaExtra> convertStringToEEList(String descExtra){
 
             if(descExtra != null && descExtra.length()>1){
                 
@@ -36,7 +36,10 @@ public class ControleDao {
                 for(String sv : v){
                     if(sv.length() > 2){
                     String s[] = sv.split("=");
-                    EntradaExtra e = new EntradaExtra(s[0], Float.parseFloat( s[1]));
+                    if(s[0].contains("null")){
+                        s[0] = s[0].replace("null", "");
+                    }
+                    EntradaExtra e = new EntradaExtra(s[0], Double.parseDouble( s[1]));
                     l.add(e);
                     }
                 }
@@ -77,8 +80,8 @@ public class ControleDao {
         try{
             abrirConexao();
         String mesano = ctrl.getMes() + "_" + ctrl.getAno();
-        Float limite = ctrl.getLimite();
-        Float valEnt = ctrl.getValorEntrada();
+        double limite = ctrl.getLimite();
+        double valEnt = ctrl.getValorEntrada();
         String descEnt = ctrl.getDescricaoEntrada();
         boolean aberto = ctrl.EmAberto();
         String query = " insert into Controle(mes_ano,limite,valorEntrada,descricaoEntrada,emAberto) "
@@ -87,8 +90,8 @@ public class ControleDao {
         stmt = con.prepareStatement(query);
         //stmt.setInt(1,null);
         stmt.setString(1,mesano);
-        stmt.setFloat(2,limite);
-        stmt.setFloat(3,valEnt);
+        stmt.setDouble(2,limite);
+        stmt.setDouble(3,valEnt);
         stmt.setString(4,descEnt);
         stmt.setBoolean(5,aberto);
 
@@ -124,8 +127,10 @@ public class ControleDao {
                 descExtra = "";
             }
            
-            if(descExtra == "null"){
+            if(descExtra == null){
                 descExtra = "";
+            }else if(descExtra.contains("null")){
+                descExtra = descExtra.replace("null", "");
             }
             descExtra = descExtra + map.getDescricaoEntrada() + " = " + map.getValorEntrada() + " , ";
 
@@ -161,10 +166,10 @@ public class ControleDao {
             ResultSet rs = stmt.executeQuery();
 
         
-            List<EntradaExtra> map = convertStringToMap(rs.getString("valor_descricaoEntradaExtra"));
+            List<EntradaExtra> map = convertStringToEEList(rs.getString("valor_descricaoEntradaExtra"));
             
 
-            Controle controle = new Controle(mes, ano, rs.getFloat("limite"), rs.getFloat("valorEntrada"), rs.getString("descricaoEntrada"),map,rs.getFloat("totalGasto") ,rs.getFloat("diferenca"), rs.getBoolean("emAberto"));
+            Controle controle = new Controle(mes, ano, rs.getDouble("limite"), rs.getDouble("valorEntrada"), rs.getString("descricaoEntrada"),map,rs.getDouble("totalGasto") ,rs.getDouble("diferenca"), rs.getBoolean("emAberto"));
 
             return controle;
         }catch(Exception e){
@@ -183,12 +188,12 @@ public class ControleDao {
     }
 
 
-    public boolean alterarLimite(Float lim) { //, String mes, String ano
+    public boolean alterarLimite(Double lim) { //, String mes, String ano
         try{
             abrirConexao();
         String query = "update Controle set limite=? where emAberto = 1 "; //'" + (mes + "_" + ano)+"'";
         stmt = con.prepareStatement(query);
-        stmt.setFloat(1, lim);
+        stmt.setDouble(1, lim);
         stmt.execute();
 
         return true;
@@ -236,12 +241,12 @@ public class ControleDao {
         }
     }
 
-    public boolean fecharControle(String mes_ano,float dif) {
+    public boolean fecharControle(String mes_ano,double dif) {
         try{
             abrirConexao();
         String query = "update Controle set emAberto=0, diferenca=? where mes_ano = ?";
         stmt = con.prepareStatement(query);
-        stmt.setFloat(1, dif);
+        stmt.setDouble(1, dif);
         stmt.setString(2, mes_ano);
         stmt.execute();
 
@@ -261,12 +266,12 @@ public class ControleDao {
         }
     }
 
-    public boolean alterarEntrada(Float entr, String descricao) { //, String mes, String ano
+    public boolean alterarEntrada(Double entr, String descricao) { //, String mes, String ano
         try{
             abrirConexao();
         String query = "update Controle set valorEntrada=?, descricaoEntrada=? where emAberto = 1 "; //'" + (mes + "_" + ano)+"'";
         stmt = con.prepareStatement(query);
-        stmt.setFloat(1, entr);
+        stmt.setDouble(1, entr);
         stmt.setString(2,descricao);
         stmt.execute();
 
@@ -287,7 +292,7 @@ public class ControleDao {
     }
     
 
-    public float totalGastoMes(String mes_ano){
+    public double totalGastoMes(String mes_ano){
         try{
             abrirConexao();
             String query = "select totalGasto from Controle where mes_ano = ?";
@@ -296,7 +301,7 @@ public class ControleDao {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                return rs.getFloat("totalGasto");
+                return rs.getDouble("totalGasto");
             }else{
                 return 0;
             }
@@ -316,12 +321,12 @@ public class ControleDao {
         }   
     }
 
-    public void somaTotalGasto(float total, String mes_ano){
+    public void somaTotalGasto(double total, String mes_ano){
         try{
             abrirConexao();
             String query = "update Controle set totalGasto = ? where mes_ano = ?";
             stmt = con.prepareStatement(query);
-            stmt.setFloat(1, total);
+            stmt.setDouble(1, total);
             stmt.setString(2, mes_ano);
             stmt.execute();
         }catch(SQLException e){

@@ -8,9 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
+import Util.util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -18,7 +18,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -29,16 +28,20 @@ public class Sobre {
     @FXML
     private Label icoSobre;
 
+    @FXML
+    private Label labelVersion;
+
         @FXML
     private Hyperlink link;
 
      @FXML
     private Button reset;
 
-    private String url = "https://github.com/kvnvkDev/";
+    private String url = "https://github.com/kvnvkDev/ControleGastoMensal";
 
     public void initialize(){
 
+        labelVersion.setText("1.0.1 - 2024");
         try {
             icoSobre.setText("");
             link.setText("");
@@ -50,17 +53,6 @@ public class Sobre {
         
     }
     
-
-    public void restartApplication(ActionEvent event) throws URISyntaxException, IOException{
-            try {
-                final Node source = (Node) event.getSource();
-                final Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-        }
 
 
         @FXML
@@ -97,7 +89,7 @@ public class Sobre {
                     tid.setTitle("Reset");
                     tid.setHeaderText("Aplicação foi resetada.");
                     tid.showAndWait();
-                    restartApplication(event);
+                    util.restartApplication(event);
                 }catch (NumberFormatException | IOException | URISyntaxException e) {
                     Alert tidErr2 = new Alert(Alert.AlertType.ERROR);
                     System.out.println(e.getMessage());

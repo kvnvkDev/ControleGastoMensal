@@ -3,6 +3,7 @@ package View;
 import java.time.LocalDate;
 
 import Model.Controle;
+import Util.util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,8 +38,8 @@ public class PrimeiroAcesso {
 
     public void initialize(){
         try {
-            App.mascaraNumero(txtValEntrada);
-            App.mascaraNumero(txtValLimite);
+            util.mascaraNumero(txtValEntrada,2);
+            util.mascaraNumero(txtValLimite,2);
 
             labelIco.setText("");
             labelIco.setStyle("-fx-background-image: url(\"/ico/icone.png\");");
@@ -62,7 +63,7 @@ public class PrimeiroAcesso {
                 tidErr.setHeaderText("Preencha todos os campos para iniciar.");
                 tidErr.showAndWait();
             }else{
-                Controle c = new Controle(mes,ano,Float.parseFloat(txtValLimite.getText()),Float.parseFloat(txtValEntrada.getText()),txtDescEntrada.getText(),true);
+                Controle c = new Controle(mes,ano,Double.parseDouble(txtValLimite.getText()),Double.parseDouble(txtValEntrada.getText()),txtDescEntrada.getText(),true);
                 AppMain.CDAO.criarControle(c);
                 System.out.println("Criado novo controle");
 

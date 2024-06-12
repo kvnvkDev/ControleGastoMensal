@@ -2,12 +2,12 @@ package View;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import Util.util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,7 +17,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class ExportarImportar {
 
@@ -32,18 +31,6 @@ public class ExportarImportar {
 
     @FXML
     private Label labelCaminhoImp;
-
-
-     public void restartApplication(ActionEvent event) throws URISyntaxException, IOException{
-            try {
-                final Node source = (Node) event.getSource();
-                final Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-        }
 
 
       @FXML
@@ -123,7 +110,7 @@ public class ExportarImportar {
                 tid.setTitle("Importar");
                 tid.setHeaderText("Arquivo importado com sucesso.");
                 tid.showAndWait();
-                restartApplication(event);
+                util.restartApplication(event);
             }
 
         } catch (Exception e) {

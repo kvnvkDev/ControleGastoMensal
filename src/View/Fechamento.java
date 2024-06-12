@@ -3,15 +3,14 @@ package View;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import Model.Controle;
 import Model.EntradaExtra;
+import Util.util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,7 +63,7 @@ public class Fechamento {
    @FXML
     private CheckBox checkDif;
 
-    private float dif;
+    private double dif;
 
     public static boolean close = false;
 
@@ -81,14 +80,6 @@ public class Fechamento {
     }
 
 
- private Locale localeBR = new Locale( "pt", "BR" ); 
-    private String numFormatText(float val,int decimals){
-         NumberFormat num = NumberFormat.getNumberInstance(localeBR);
-         num.setMinimumFractionDigits(decimals);
-         num.setMaximumFractionDigits(decimals);
-
-         return num.format(val);
-    }
     
 
     public void initialize(){
@@ -96,30 +87,30 @@ public class Fechamento {
         try{
         labelTitulo.setText("Fechamento do mês de " + App.mes);
 
-        labelLimite.setText("Limite: R$ "+numFormatText(App.controle.getLimite(),2));
+        labelLimite.setText("Limite: R$ "+util.numFormatText(App.controle.getLimite(),2));
 
-        labelSaldo.setText("Saldo: R$ "+numFormatText(App.controle.getValorEntrada(),2));
+        labelSaldo.setText("Saldo: R$ "+util.numFormatText(App.controle.getValorEntrada(),2));
         labelDescricao.setText("Descrição: "+App.controle.getDescricaoEntrada());
 
-        float saldo = 0;
+        double saldo = 0;
         String desc = "";
         List<EntradaExtra> m = App.controle.getEntradaExtra();
         if (m == null || m.isEmpty()) {
             labelSaldoExtra.setText("Saldo extra: R$ ");
             labelDescricaoExtra.setText("Descrição: ");
-        }else{System.out.println("map"+m);
+        }else{
             for (int i=0; i < m.size();i++){
-                saldo = saldo + m.get(i).getValorEntrada();System.out.println(saldo);
-                desc = desc + m.get(i).getDescricaoEntrada() + ": "+ numFormatText(m.get(i).getValorEntrada(),2) + "\n";
+                saldo = saldo + m.get(i).getValorEntrada();
+                desc = desc + m.get(i).getDescricaoEntrada() + ": "+ util.numFormatText(m.get(i).getValorEntrada(),2) + "\n";
             }
-            labelSaldoExtra.setText("Saldo extra: R$ " + numFormatText(saldo,2));
+            labelSaldoExtra.setText("Saldo extra: R$ " + util.numFormatText(saldo,2));
             labelDescricaoExtra.setText("Descrição: "+ desc);
         }
 
-        labelTotal.setText("Total Gasto: R$ "+ numFormatText(App.controle.getTotalGasto(),2));
+        labelTotal.setText("Total Gasto: R$ "+ util.numFormatText(App.controle.getTotalGasto(),2));
 
         dif = (App.controle.getValorEntrada() + saldo) - App.controle.getTotalGasto();
-        labelDif.setText("Diferença: R$ "+ numFormatText(dif, 2));
+        labelDif.setText("Diferença: R$ "+ util.numFormatText(dif, 2));
         }catch(Exception e ){
             System.out.println("Erro iniciar fechamento "+e.getMessage());
         }
@@ -134,6 +125,7 @@ public class Fechamento {
         alert.setContentText("Após fechar o mês não será possível fazer alterações no controle deste mês.");
         alert.setHeaderText("Deseja fechar o mês " + App.mes + "?");
         alert.initModality(Modality.APPLICATION_MODAL);
+
         @SuppressWarnings("rawtypes")
         Optional option = alert.showAndWait();
 
@@ -141,7 +133,7 @@ public class Fechamento {
             
             try{
                 YearMonth ym = YearMonth.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES));
-                LocalDate d = ym.atEndOfMonth();//LocalDate.of(Integer.parseInt(App.ANO), Integer.parseInt(App.MES), n);
+                LocalDate d = ym.atEndOfMonth();
 
                 if(d.isBefore(App.DATENOW)){
                 App.controle.setDiferenca(dif);
@@ -153,7 +145,6 @@ public class Fechamento {
 
                 if(checkDif.isSelected() && dif > 0){
                     EntradaExtra ee = new EntradaExtra("Saldo do mes " + App.mes, dif);
-                    //System.out.println("insrindoee" + String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
                     App.cDao.inserirEntradaExtra(ee, String.valueOf(App.DATENOW.getMonthValue()) + "_" + String.valueOf(App.DATENOW.getYear()));
            
                 }
@@ -180,7 +171,7 @@ public class Fechamento {
     @FXML
     void verItens(ActionEvent event){
         try{
-            App.DADOS = App.MES+"_"+App.ANO;//testtar
+            App.DADOS = App.MES+"_"+App.ANO;
             FXMLLoader fxmll = new FXMLLoader(getClass().getResource("Historico.fxml"));
             Parent root = fxmll.load();
             
