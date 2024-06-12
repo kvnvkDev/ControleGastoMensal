@@ -1,12 +1,13 @@
 .vscode
-/src/View/Teste.java
-/src/View/TesteApp.java
-/src/View/Teste.fxml
-/bin/View/Teste.class
-/bin/View/TesteApp.class
-/bin/View/Teste.fxml
+src/View/Teste.java
+src/View/TesteApp.java
+src/View/Teste.fxml
+bin/View/Teste.class
+bin/View/TesteApp.class
+bin/View/Teste.fxml
 Controle de Gasto Mensal.exe
 Controle de Gasto Mensal.jar
 controlemensal rascunho.odg
 Controle de Gasto Mensal.iss
 list deps controle gasto mensal.txt
+setup.exe

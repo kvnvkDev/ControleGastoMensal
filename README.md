@@ -22,7 +22,7 @@ O aplicativo ainda possui:
 *********
 Instalação
 
-Para instalar o aplicativo basta baixar e executar o arquivo .exe que pode ser encontrado no release deste repositório seguindo os passos do instalador. Não é necessário a instalação do jdk o jre do Java.
+Para instalar o aplicativo basta baixar e executar o arquivo .exe que pode ser encontrado no <a href="https://github.com/kvnvkDev/ControleGastoMensal/releases/tag/v1.0">release</a> deste repositório seguindo os passos do instalador. Não é necessário a instalação do jdk o jre do Java.
 
 Para executar basta abrir o atalho criado na área de trabalho ou o arquivo exec.vbs na pasta de instalação do aplicativo.
 
